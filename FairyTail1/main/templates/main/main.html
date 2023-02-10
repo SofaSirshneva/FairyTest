@@ -1,0 +1,46 @@
+{% extends "main/frame.html" %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td class="maincol">
+                <div class="heading text-center">Популярное</div>
+            </td>
+            <td rowspan="3" class="cent">
+                <button type="button" style="font-size: 20px; margin-bottom: 20px;" class="btn btn-danger">Создать тест</button>
+                <button type="button" style="font-size: 20px; margin-bottom: 20px;" class="btn btn-success">Мои тесты</button>
+            </td>
+            <td class="pop"></td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr class="text-center">
+                        <td class="pop"></td>
+                        <td class="pop lowborder">
+                            №
+                        </td>
+                        <td class="lowborder" style="width:400px">
+                            Название
+                        </td>
+                        <td class="lowborder" style="width:200px">
+                            Количество прохождений
+                        </td>
+                        <td class="lowborder" style="width:200px">
+                            Средний результат
+                        </td>
+                        <td class="lowborder" style="width:200px">
+                            Рейтинг
+                        </td>
+                        <td class="pop"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+{% endblock %}

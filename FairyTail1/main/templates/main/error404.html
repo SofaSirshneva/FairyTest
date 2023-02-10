@@ -1,0 +1,10 @@
+{% load static %}
+{% extends "main/frame.html" %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+</head>
+<div class="heading text-center">Такой страницы не существует</div>
+<img src="{% static 'main/img/404.png' %}" wigth="400px">
+{% endblock %}
