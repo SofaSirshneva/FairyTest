@@ -77,3 +77,5 @@ class EnterPage(TemplateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Вход'
         return context
+
+#Svin
