@@ -37,15 +37,6 @@ class Registration(CreateView):
             else:
                 return render(request, self.template_name, {'form': form})
 
-    """ def post(self, request, *args, **kwargs):
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            return(redirect('enter'))
-        else:
-            return render(request, self.template_name, {'form' : form})
- """
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'

@@ -25,7 +25,7 @@
               <p>Щелкните по картинке для изменения</p>
                 <div class="card col-sm-9">
                   <!--<input class="loadava" type="file" accept=".png, .jpg" onchange="loadFile(event)">-->
-                  <!--{{ form.avatar }}-->
+                  {{ form.avatar }}
                   <img src="{% static 'main/img/avatar.png' %}" width="300px" id="default">
                 </div>
             </div>
@@ -52,12 +52,23 @@
                   <div class="col-10">
                     <label for="username" class="form-label">Логин*:</label>
                     <div class="input-group has-validation">
-                      <!--<input type="text" class="form-control" id="username" required>-->
                       {{ form.username }}
+                      <!--<input type="text" class="form-control" id="username" required>-->
                     <div class="invalid-feedback">
                         Это поле обязательно для заполнения!
                       </div>
                     </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "username" %}
+                          <div style="color:red; font-size: 14px;">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
                   </div>
       
                   <div class="col-10">
@@ -67,6 +78,17 @@
                     <div class="invalid-feedback">
                         Неверный email!
                     </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "email" %}
+                          <div style="color:red; font-size: 14px;">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
                   </div>
       
                   <div class="col-10">
@@ -76,6 +98,17 @@
                     <div class="invalid-feedback">
                         Неверный номер!
                     </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "number" %}
+                          <div style="color:red; font-size: 14px;">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
                   </div>
       
                   <div class="col-10">
@@ -116,16 +149,29 @@
                   <div class="col-sm-5">
                     <label for="password" class="form-label">Пароль*:</label>
                     <!-- <input type="password" minlength="6" maxlength="15" class="form-control" required> -->
-                    {{ form.password }}
+                    {{ form.password1 }}
                     <div class="invalid-feedback">
                       Пароль должен быть длиной от 6 до 15 символов!
                     </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "password1" or field.name == "password2" %}
+                          <div style="color:red; font-size: 14px;">
+                            <ul type="*">
+                            {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
                   </div>
   
                   <div class="col-sm-5">
                     <label for="password" class="form-label">Повторите пароль*:</label>
-                    <input type="password" minlength="6" maxlength="15" class="form-control" required>
-                    <!--{{ form.password2 }}-->
+                    <!--<input type="password" minlength="6" maxlength="15" class="form-control" required>-->
+                    {{ form.password2 }}
                     <div class="invalid-feedback">
                       Повторите пароль!
                     </div>
@@ -147,7 +193,6 @@
                   {{ form.mailing }}
                   <label class="form-check-label" for="save-info">Получать уведомления на почту об обновлениях </label>
                 </div>
-      
                 <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit">Зарегистрироваться</button></div>
               </form>
             </div>
@@ -155,8 +200,8 @@
         </main>
       </div>
     
-      <script>
-        (() => {
+  <script>
+  (() => {
   'use strict'
   const forms = document.querySelectorAll('.needs-validation')
 
