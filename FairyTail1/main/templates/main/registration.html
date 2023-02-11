@@ -26,7 +26,7 @@
                 <div class="card col-sm-9">
                   <!--<input class="loadava" type="file" accept=".png, .jpg" onchange="loadFile(event)">-->
                   {{ form.avatar }}
-                  <img src="{% static 'main/img/avatar.png' %}" width="300px" id="default">
+                  <img src="{% static 'main/img/davatar.png' %}" width="300px" id="default">
                 </div>
             </div>
             <div class="col-md-7 col-lg-8">
@@ -61,7 +61,7 @@
                     {% if form.errors %}
                           {% for field in form %}
                           {% if field.name == "username" %}
-                          <div style="color:red; font-size: 14px;">
+                          <div class="error">
                             {% for error in field.errors %}
                               *{{ error }}
                             {% endfor %}
@@ -81,7 +81,7 @@
                     {% if form.errors %}
                           {% for field in form %}
                           {% if field.name == "email" %}
-                          <div style="color:red; font-size: 14px;">
+                          <div class="error">
                             {% for error in field.errors %}
                               *{{ error }}
                             {% endfor %}
@@ -101,7 +101,7 @@
                     {% if form.errors %}
                           {% for field in form %}
                           {% if field.name == "number" %}
-                          <div style="color:red; font-size: 14px;">
+                          <div class="error">
                             {% for error in field.errors %}
                               *{{ error }}
                             {% endfor %}
@@ -156,7 +156,7 @@
                     {% if form.errors %}
                           {% for field in form %}
                           {% if field.name == "password1" or field.name == "password2" %}
-                          <div style="color:red; font-size: 14px;">
+                          <div class="error">
                             <ul type="*">
                             {% for error in field.errors %}
                               <li>{{ error }}</li>
@@ -200,7 +200,7 @@
         </main>
       </div>
     
-  <script>
+<script>
   (() => {
   'use strict'
   const forms = document.querySelectorAll('.needs-validation')
@@ -215,18 +215,38 @@
       form.classList.add('was-validated')
     }, false)
   })
-})()
-      </script>
-      <script>
-        $.mask.definitions['h'] = "[0|1|3|4|5|6|7|9]"
-        $(".mask-phone").mask("+7 (h99) 999-99-99")
-        </script>
+  })()
+</script>
+<script>
+  $.mask.definitions['h'] = "[0|1|3|4|5|6|7|9]"
+  $(".mask-phone").mask("+7 (h99) 999-99-99")
+</script>
 
 <script>
   var loadFile = function (event) {
-var image = document.getElementById("default");
-image.src = URL.createObjectURL(event.target.files[0]);
-};
+  var image = document.getElementById("default");
+  image.src = URL.createObjectURL(event.target.files[0]);
+  };
+</script>
+
+<script>
+  function choicecity(country, city) {
+    var cityField = document.getElementById("id_city");
+    var cities = [];
+    for(var i=0; i<2513; i++){
+    if(city[i]['region_id'] == country){
+      cities.push(city[i]['name'])
+      alert(city[i]['name'])
+    }
+    }
+    cityField.innerHTML = "";
+    for (var i = 0; i < cities.length; i++) {
+        var option = document.createElement("option");
+        option.value = cities[i];
+        option.text = cities[i];
+        cityField.appendChild(option);
+    }
+}
 </script>
 </body>
 {% endblock %}

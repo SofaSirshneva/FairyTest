@@ -79,17 +79,22 @@ class RegisterForm(UserCreationForm):
             'id' : 'dateofbirth',
             'required' : '',
         }) """
-        self.fields["country"] =  forms.ChoiceField(required=True, choices=REGION, initial='Выбор...',
+        self.fields["country"] =  forms.ChoiceField(required=True, choices=REGION,
                                 widget=Select({
                                     'class' : 'form-select',
+                                    'onchange' : 'choicecity(document.getElementById("id_country").value, city)',
+                                    'id': 'id_country'
                                 }))
         self.fields["city"] =  forms.ChoiceField(required=True, choices=CITY, 
                                 widget=Select({
                                     'class' : 'form-select',
+                                    'id' : 'id_city'
                                 }))
         self.fields["date_of_birth"] = forms.DateField(required=True,
                            widget=DateInput({
                                'class': 'form-control',
+                               'min' : "1900-01-01",
+                               'max' : "2016-12-31"
                            }))
         self.fields["password1"] = forms.CharField(required=True,
                            widget=PasswordInput({
