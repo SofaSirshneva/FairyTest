@@ -82,7 +82,7 @@ class RegisterForm(UserCreationForm):
         self.fields["country"] =  forms.ChoiceField(required=True, choices=REGION,
                                 widget=Select({
                                     'class' : 'form-select',
-                                    'onchange' : 'choicecity(document.getElementById("id_country").value, city)',
+                                    'onchange' : 'choicecity(document.getElementById("id_country").value)',
                                     'id': 'id_country'
                                 }))
         self.fields["city"] =  forms.ChoiceField(required=True, choices=CITY, 

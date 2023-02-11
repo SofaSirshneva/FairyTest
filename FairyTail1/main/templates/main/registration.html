@@ -230,22 +230,32 @@
 </script>
 
 <script>
-  function choicecity(country, city) {
+  function choicecity(country) {
+    alert(country);
     var cityField = document.getElementById("id_city");
-    var cities = [];
-    for(var i=0; i<2513; i++){
-    if(city[i]['region_id'] == country){
-      cities.push(city[i]['name'])
-      alert(city[i]['name'])
-    }
-    }
-    cityField.innerHTML = "";
-    for (var i = 0; i < cities.length; i++) {
-        var option = document.createElement("option");
-        option.value = cities[i];
-        option.text = cities[i];
-        cityField.appendChild(option);
-    }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/static/main/cities.json', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var cities = JSON.parse(xhr.responseText);
+        var citiesToShow = [];
+        if(country>=67)
+          country++;
+        for(var i=0; i<cities.length; i++){
+          if(cities[i]['region_id'] == country){
+            citiesToShow.push(cities[i]['name'])
+          }
+        }
+        cityField.innerHTML = "";
+        for (var i = 0; i < citiesToShow.length; i++) {
+            var option = document.createElement("option");
+            option.value = citiesToShow[i];
+            option.text = citiesToShow[i];
+            cityField.appendChild(option);
+        }
+      }
+    };
+    xhr.send();
 }
 </script>
 </body>
