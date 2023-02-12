@@ -4,8 +4,8 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     number=models.CharField(max_length=25, null=True, unique=True)
     date_of_birth=models.DateField(default='1111-11-11')
-    city=models.CharField(max_length=50, default='Выбор...')
-    country=models.CharField(default='', max_length=255)
+    city=models.CharField(max_length=50, default='0')
+    country=models.CharField(default='0', max_length=255)
     test_result=models.ManyToManyField('Tests', through="Test_results")
     time_update=models.DateTimeField(auto_now=True)
     mailing=models.BooleanField(default=True)

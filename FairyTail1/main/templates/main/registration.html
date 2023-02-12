@@ -144,6 +144,17 @@
                     <div class="invalid-feedback">
                         Это поле обязательно для заполнения!
                     </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "city" %}
+                          <div class="error">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
                   </div>
 
                   <div class="col-sm-5">
@@ -237,6 +248,7 @@
       if (xhr.readyState === 4 && xhr.status === 200) {
         var cities = JSON.parse(xhr.responseText);
         var citiesToShow = [];
+        country--;
         if(country>=67)
           country++;
         for(var i=0; i<cities.length; i++){

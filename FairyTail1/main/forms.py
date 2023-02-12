@@ -12,19 +12,14 @@ class RegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         i=0
-        
-        CITY=()
         REGION=()
 
-        with open('main\static\main\cities.json', 'r',  encoding="utf8") as f:
-            city =  json.load(f)
         with open('main\static\main\pegion.json', 'r',  encoding="utf8") as f:
             region =  json.load(f)
 
-        """ with open('FairyTail1\main\static\main\cities.json', 'r',  encoding="utf8") as f:
-            city =  json.load(f)
-        with open('FairyTail1\main\static\main\pegion.json', 'r',  encoding="utf8") as f:
+        """with open('FairyTail1\main\static\main\pegion.json', 'r',  encoding="utf8") as f:
             region =  json.load(f) """
         
         while i!= 78:
@@ -32,15 +27,6 @@ class RegisterForm(UserCreationForm):
             REGIONS.append(region[i]['name'])
             RE=tuple(REGIONS)
             REGION+=RE,
-            i=i+1
-
-        i=0
-
-        while i!= 2513:
-            CITIES=[i]
-            CITIES.append(city[i]['name'])
-            CI=tuple(CITIES)
-            CITY+=CI,
             i=i+1
 
         self.fields["first_name"].widget.attrs.update({
@@ -85,7 +71,7 @@ class RegisterForm(UserCreationForm):
                                     'onchange' : 'choicecity(document.getElementById("id_country").value)',
                                     'id': 'id_country'
                                 }))
-        self.fields["city"] =  forms.ChoiceField(required=True, choices=CITY, 
+        self.fields["city"] =  forms.CharField(required=True,
                                 widget=Select({
                                     'class' : 'form-select',
                                     'id' : 'id_city'
@@ -122,7 +108,6 @@ class RegisterForm(UserCreationForm):
     def clean_password(self):
         password = self.cleaned_data['password1']
         validate_password(password)
-        self.add_error(password, "...")
         return password
 
     def clean_password2(self):
