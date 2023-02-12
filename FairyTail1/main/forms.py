@@ -1,8 +1,8 @@
 import json
 from django import forms
 from main.models import CustomUser
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.forms.widgets import DateInput, Select, PasswordInput, CheckboxInput, FileInput
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
+from django.forms.widgets import DateInput, Select, PasswordInput, CheckboxInput, FileInput, TextInput, EmailInput
 from django.contrib.auth.password_validation import validate_password
 
 class DateInput(forms.DateInput):
@@ -29,36 +29,32 @@ class RegisterForm(UserCreationForm):
             REGION+=RE,
             i=i+1
 
-        self.fields["first_name"].widget.attrs.update({
-            'type' : 'text',
-            'class' : 'form-control',
-            'id' : 'name',
-            'required' : '',
-        })
-        self.fields["last_name"].widget.attrs.update({
-            'type' : 'text',
-            'class' : 'form-control',
-            'id' : 'surname',
-            'required' : '',
-        })
-        self.fields["username"].widget.attrs.update({
-            'type' : 'text',
-            'class' : 'form-control',
-            'id' : 'login',
-            'required' : '',
-        })
-        self.fields["email"].widget.attrs.update({
-            'type' : 'email',
-            'class' : 'form-control',
-            'id' : 'email',
-            'placeholder' : 'you@example.com',
-            'required' : '',
-        })
-        self.fields["number"].widget.attrs.update({
-            'type' : 'text',
-            'class' : 'form-control mask-phone',
-            'id' : 'number',
-        })
+        self.fields["first_name"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                    'id' : 'first_name',
+                                }))
+        self.fields["last_name"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                    'id' : 'last_name',
+                                }))
+        self.fields["username"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                    'id' : 'login',
+                                }))
+        self.fields["email"] = forms.EmailField(required=True,
+                                widget=EmailInput({
+                                    'class' : 'form-control',
+                                    'id' : 'email',
+                                    'placeholder' : 'you@example.com',
+                                    }))
+        self.fields["number"] = forms.CharField(required=False,
+                                widget=TextInput({
+                                    'class' : 'form-control mask-phone',
+                                    'id' : 'number',
+                                }))
         """  self.fields["date_of_birth"].widget.attrs.update({
             'input_type' : 'date',
             'class' : 'form-control',
@@ -134,8 +130,26 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError('Пользователь с таким логином уже существует')
         return username
 
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
+        return avatar
+
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
         fields = ('username', 'email')
+
+class LoginUserForm(AuthenticationForm):
+       
+        username = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                    'id' : 'floatingInput'
+                                }))
+
+        password = forms.CharField(required=True,
+                           widget=PasswordInput({
+                               'class': 'form-control',
+                               'id' : 'floatingPassword'
+                           }))

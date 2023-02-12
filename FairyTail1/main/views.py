@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
-from main.forms import RegisterForm
+from main.forms import RegisterForm, LoginUserForm
 from django.views.generic.edit import CreateView
 from django.shortcuts import redirect
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
 
 class MainPage(TemplateView):
     template_name='main/main.html'
@@ -23,7 +25,7 @@ class Error404Page(TemplateView):
 
 class Registration(CreateView):
     form_class = RegisterForm
-    success_url = reverse_lazy('enter')
+    success_url = reverse_lazy('login')
     template_name = "main/registration.html"
 
     def post(self, request):
@@ -33,7 +35,7 @@ class Registration(CreateView):
                 user = form.save(commit=False)
                 user.save()
                 #form.save()
-                return redirect('enter')
+                return redirect('login')
             else:
                 return render(request, self.template_name, {'form': form})
 
@@ -41,6 +43,22 @@ class Registration(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'
         return context
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = "main/login.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Вход'
+        return context
+    
+    def get_success_url(self):
+        return reverse_lazy('main')
+
+def logoutUser(request):
+    logout(request)
+    return redirect('login')
 
 """ def update_profile(request):
     if request.method == 'POST':
@@ -61,12 +79,3 @@ class Registration(CreateView):
         'profile_form': profile_form
     })
  """
-class EnterPage(TemplateView):
-    template_name='main/enter.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Вход'
-        return context
-
-#Svin

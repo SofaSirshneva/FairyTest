@@ -35,11 +35,16 @@
                 <input class="form-control me-2" type="search" placeholder="Поиск..." aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Найти</button>
               </form>
-
+              {% if request.user.is_authenticated %}
               <div class="menulink">
-                <a href="{% url 'enter' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
+                <a href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Выйти</button></a>
+              </div>
+              {% else %}
+              <div class="menulink">
+                <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
                 <a href="{% url 'registration' %}"><button type="button" class="btn btn-primary">Зарегистрироваться</button></a>
               </div>
+              {% endif %}
                 </div>
               </div>
       </nav>
@@ -77,12 +82,13 @@
             </li>
           </ul>
 
-    <div style="margin-top:380px">
+    <div style="margin-top:390px">
     <hr class="hr-shelf">
+    {% if request.user.is_authenticated %}
     <div class="dropdown">
       <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-        <strong>mdo</strong>
+        <img src="{{ user.avatar }}" alt="" width="40" height="40" class="rounded-circle me-2">
+        <strong>{{ user.username }}</strong>
       </a>
       <ul class="dropdown-menu dropdown-menu-dark text-xl-center shadow">
         <li><a class="dropdown-item"  target="iframe" href="#">Мой профиль</a></li>
@@ -90,6 +96,9 @@
         <li><a class="dropdown-item"  target="iframe" href="#">Выйти</a></li>
       </ul>
     </div>
+    {% else %}
+    <a class="menulink2" href="{% url 'login' %}">Войти</a>
+    {% endif %}
   </div>
         </div>
       </div>
@@ -116,8 +125,16 @@
                 <button class="btn btn-outline-success" type="submit">Найти</button>
               </form>
               <div class="menulink mt">
-                <a href="{% url 'enter' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
+                {% if request.user.is_authenticated %}
+              <div class="menulink">
+                <a href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Выйти</button></a>
+              </div>
+              {% else %}
+              <div class="menulink">
+                <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
                 <a href="{% url 'registration' %}"><button type="button" class="btn btn-primary">Зарегистрироваться</button></a>
+              </div>
+              {% endif %}
                 </div>
             </div>
       </div>
