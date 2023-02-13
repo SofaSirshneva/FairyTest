@@ -30,7 +30,7 @@ class Registration(CreateView):
 
     def post(self, request):
         if request.method == 'POST':
-            form = RegisterForm(request.POST)
+            form = RegisterForm(request.POST, request.FILES)
             if form.is_valid():
                 user = form.save(commit=False)
                 user.save()

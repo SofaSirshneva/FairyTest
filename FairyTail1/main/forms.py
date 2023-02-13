@@ -130,10 +130,6 @@ class RegisterForm(UserCreationForm):
             raise forms.ValidationError('Пользователь с таким логином уже существует')
         return username
 
-    def clean_avatar(self):
-        avatar = self.cleaned_data['avatar']
-        return avatar
-
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:

@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     test_result=models.ManyToManyField('Tests', through="Test_results")
     time_update=models.DateTimeField(auto_now=True)
     mailing=models.BooleanField(default=True)
-    avatar=models.ImageField(upload_to="static/main/img/")
+    avatar=models.ImageField(upload_to='photos/%Y-%m-%d/', default='avatar.png')
 
 class Answers(models.Model):
     text_content = models.TextField(null=True)
