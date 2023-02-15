@@ -165,3 +165,10 @@ a:hover{
   color:red;
    font-size: 14px;
 }
+
+.success{
+  margin-top: 30px;
+  margin-bottom: 10px;
+  color: rgb(0, 12, 185);
+  font-size: 40px;
+}

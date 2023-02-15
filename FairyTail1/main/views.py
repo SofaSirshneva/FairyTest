@@ -6,6 +6,15 @@ from django.views.generic.edit import CreateView
 from django.shortcuts import redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
+from django.contrib.sites.shortcuts import get_current_site 
+from django.utils.encoding import force_bytes, force_str 
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode 
+from .tokens import account_activation_token 
+from django.core.mail import EmailMessage 
+from django.contrib.auth import get_user_model
+from django.template.loader import get_template
+from django.http import HttpResponse
+from django.core.mail import EmailMessage
 
 class MainPage(TemplateView):
     template_name='main/main.html'
@@ -23,6 +32,14 @@ class Error404Page(TemplateView):
         context['title'] = 'Ошибка'
         return context
 
+class SuccessPage(TemplateView):
+    template_name='main/successful_confirm.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Успешная регистрация'
+        return context
+
 class Registration(CreateView):
     form_class = RegisterForm
     success_url = reverse_lazy('login')
@@ -33,8 +50,20 @@ class Registration(CreateView):
             form = RegisterForm(request.POST, request.FILES)
             if form.is_valid():
                 user = form.save(commit=False)
+                user.is_active = False
                 user.save()
-                #form.save()
+                current_site = get_current_site(request) 
+                message = { 
+                    'user': user, 
+                    'domain': current_site.domain, 
+                    'uid':urlsafe_base64_encode(force_bytes(user.pk)), 
+                    'token':account_activation_token.make_token(user), 
+                }
+                to_email = form.cleaned_data.get('email')
+                ms = get_template('main/mail_text.html').render(context=message)
+                msg = EmailMessage('Активация аккаунта', ms, to=[to_email])
+                msg.content_subtype = 'html'
+                msg.send()
                 return redirect('login')
             else:
                 return render(request, self.template_name, {'form': form})
@@ -43,6 +72,23 @@ class Registration(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'
         return context
+
+def activate(request, uidb64, token): 
+    User = get_user_model() 
+    try: 
+        uid = force_str(urlsafe_base64_decode(uidb64)) 
+        user = User.objects.get(pk=uid) 
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist): 
+        user = None 
+    if user is not None and account_activation_token.check_token(user, token): 
+        user.is_active = True 
+        user.save() 
+        t = get_template('main/successful_confirm.html')
+        c = {'is_active': True}
+        return HttpResponse(t.render(c, request))
+        #return redirect('login')
+    else: 
+        return redirect('registration')
 
 class LoginUser(LoginView):
     form_class = LoginUserForm

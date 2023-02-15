@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-fon80!t20x&r$9@$4n2^l(i-&3kpc=3uy!0s(t+tz0v!_)j9hp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_select2',
+    'django.utils'
 ]
 
 AUTH_USER_MODEL = 'main.CustomUser'
@@ -133,4 +133,12 @@ STATICFILES_DIRS = []
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+EMAIL_HOST = 'smtp.mail.ru' 
+EMAIL_HOST_USER = 'sofasirsneva@mail.ru' 
+EMAIL_HOST_PASSWORD = '5SSGkp4S3Actykt5qPY5' 
+EMAIL_PORT = 2525 
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
 

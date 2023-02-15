@@ -15,7 +15,7 @@
             <div class="heading text-center mb">
                 Регистрация
             </div>
-          <form class="needs-validation" method="POST" name="RegisterForm" enctype="multipart/form-data">
+          <form class="needs-validation" method="POST" name="RegisterForm" enctype="multipart/form-data" onsubmit="confirm()">
           {% csrf_token %}
           <div class="row">
             <div class="col-md-5 col-lg-4 order-md-last">
@@ -204,7 +204,7 @@
                   {{ form.mailing }}
                   <label class="form-check-label" for="save-info">Получать уведомления на почту об обновлениях </label>
                 </div>
-                <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit">Зарегистрироваться</button></div>
+                <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit" >Зарегистрироваться</button></div>
               </form>
             </div>
           </div>
@@ -267,6 +267,12 @@
     };
     xhr.send();
 }
+</script>
+
+<script>
+  function confirm() {
+      alert('Пожалуйста, перейдите на почту и подтвердите аккаунт')
+  };
 </script>
 </body>
 {% endblock %}
