@@ -22,13 +22,16 @@ class Questions(models.Model):
 
 class Tests(models.Model):
     name = models.CharField(max_length=255)
-    questions=models.ForeignKey('Questions', on_delete=models.PROTECT)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL", default='')
+    questions=models.ForeignKey('Questions', on_delete=models.PROTECT, default='1')
+    private=models.BooleanField(default=False)
+    password = models.CharField(null=True, max_length=20)
     rating=models.FloatField(default=0)
     average_result=models.FloatField(default=0)
     number_of_passes=models.IntegerField(default=0)
     time_control=models.IntegerField(null=True)
     author=models.ForeignKey('CustomUser', on_delete=models.PROTECT)
-    categorys=models.ManyToManyField('Categories')
+    categories=models.ManyToManyField('Categories', default='')
     time_create=models.DateTimeField(auto_now_add=True)
     time_update=models.DateTimeField(auto_now=True)
 

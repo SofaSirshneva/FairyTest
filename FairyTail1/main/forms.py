@@ -1,9 +1,11 @@
 import json
 from django import forms
-from main.models import CustomUser
+from main.models import CustomUser, Tests, Questions, Answers
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from django.forms.widgets import DateInput, Select, PasswordInput, CheckboxInput, FileInput, TextInput, EmailInput
+from django.forms.widgets import DateInput, Select, PasswordInput, CheckboxInput, FileInput, TextInput, EmailInput, RadioSelect, SelectMultiple
 from django.contrib.auth.password_validation import validate_password
+from django.forms import ModelForm
+from main.multiform import MultiModelForm
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -32,17 +34,14 @@ class RegisterForm(UserCreationForm):
         self.fields["first_name"] = forms.CharField(required=True,
                                 widget=TextInput({
                                     'class' : 'form-control',
-                                    'id' : 'first_name',
                                 }))
         self.fields["last_name"] = forms.CharField(required=True,
                                 widget=TextInput({
                                     'class' : 'form-control',
-                                    'id' : 'last_name',
                                 }))
         self.fields["username"] = forms.CharField(required=True,
                                 widget=TextInput({
                                     'class' : 'form-control',
-                                    'id' : 'login',
                                 }))
         self.fields["email"] = forms.EmailField(required=True,
                                 widget=EmailInput({
@@ -55,12 +54,6 @@ class RegisterForm(UserCreationForm):
                                     'class' : 'form-control mask-phone',
                                     'id' : 'number',
                                 }))
-        """  self.fields["date_of_birth"].widget.attrs.update({
-            'input_type' : 'date',
-            'class' : 'form-control',
-            'id' : 'dateofbirth',
-            'required' : '',
-        }) """
         self.fields["country"] =  forms.ChoiceField(required=True, choices=REGION,
                                 widget=Select({
                                     'class' : 'form-select',
@@ -149,3 +142,79 @@ class LoginUserForm(AuthenticationForm):
                                'class': 'form-control',
                                'id' : 'floatingPassword'
                            }))
+
+class CreateTestForm(ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        PRIVATE =[
+            ('0','Открытый'),
+            ('1','Закрытый')
+        ]
+
+        self.fields["name"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+        self.fields["private"] = forms.ChoiceField(required=True, choices=PRIVATE,
+                                widget=RadioSelect({
+                                    'onchange' : 'defprivate()',
+                                }))
+
+        self.fields["password"] = forms.CharField(required=False,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                    'id' : 'test_password'
+                                }))
+        self.fields["time_control"] = forms.IntegerField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+        self.fields["categories"] = forms.CharField(required=False,
+                                widget=SelectMultiple({
+                                    'class' : 'form-control',
+                                }))
+    
+    class Meta:
+        model = Tests
+        fields = ('name', 'private', 'password', 'time_control', 'categories')
+
+    categories2 = forms.CharField(required=False,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+class QuestionForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["text"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+    
+    class Meta:
+        model = Questions
+        fields = ('text', )
+
+class AnswerForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["text_content"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+    class Meta:
+        model = Answers
+        fields = ('text_content', 'correctness')
+
+class AddQuestionForm(MultiModelForm):
+    form_classes = {
+        'question': QuestionForm,
+        'answers': AnswerForm,
+    }
