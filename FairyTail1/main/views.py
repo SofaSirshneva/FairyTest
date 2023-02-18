@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
-from main.forms import RegisterForm, LoginUserForm, CreateTestForm, AddQuestionForm
+from main.forms import RegisterForm, LoginUserForm
 from django.views.generic.edit import CreateView
 from django.shortcuts import redirect
 from django.contrib.auth.views import LoginView
@@ -15,7 +15,6 @@ from django.contrib.auth import get_user_model
 from django.template.loader import get_template
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
-from pytils.translit import slugify
 
 class MainPage(TemplateView):
     template_name='main/main.html'
@@ -125,37 +124,3 @@ def logoutUser(request):
         'profile_form': profile_form
     })
  """
-
-class CreateTestPage(CreateView):
-    form_class = CreateTestForm
-    success_url = reverse_lazy('main')
-    template_name = "main/create_test.html"
-
-    def post(self, request):
-        if request.method == 'POST':
-            form = CreateTestForm(request.POST)
-            if form.is_valid():
-                test = form.save(commit=False)
-                test.author = request.user
-                test.slug = slugify(test.name)
-                test.save()
-                str = 'addquestion/' + test.slug + '/1'
-                return redirect(str)
-            else:
-                return render(request, self.template_name, {'form': form})
-
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Создание теста'
-        return context
-
-class AddQuestionPage(CreateView):
-    form_class = AddQuestionForm
-    template_name = "main/add_question.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Создание теста'
-        return context
-

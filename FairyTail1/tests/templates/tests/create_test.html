@@ -10,16 +10,16 @@
 <body>
   {% if request.user.is_authenticated %}
     <div class="text-center success">Создание теста</div>
-    <form method="post">
+    <form method="post" class="needs-validation">
       {% csrf_token %}
     <div class="col-md-7 col-lg-8">
       <div class="row g-3 boxregistr">
         <div class="col-sm-10">
-          <label for="testName" class="form-label">Название теста*:</label>
+          <label class="form-label">Название теста*:</label>
           {{ form.name }}
         </div>
         <div class="col-sm-5">
-          <label for="testPrivate" class="form-label">Тип теста*:</label><br>
+          <label class="form-label">Тип теста*:</label><br>
           <div class="foottitle">
           {% for radio in form.private %}
             {{ radio.tag }}
@@ -28,19 +28,19 @@
         </div>
       </div>
       <div class="col-sm-5">
-        <label for="testPassword" class="form-label">Пароль:</label><br>   
+        <label class="form-label">Пароль:</label><br>   
         {{ form.password }}
       </div>
       <div class="col-sm-10">
-        <label for="testTime" class="form-label">Контроль времени (в минутах)*:</label>
+        <label class="form-label">Контроль времени (в минутах)*:</label>
         {{ form.time_control }}
       </div>
       <div class="col-sm-10">
-        <label for="testCategory" class="form-label">Категории:</label>
+        <label class="form-label">Категории:</label>
         {{ form.categories }}
       </div>
       <div class="col-sm-10">
-        <label for="testCategory2" class="form-label">Вы также можете добавить свои категории (каждая категория через запятую):</label>
+        <label class="form-label">Вы также можете добавить свои категории (каждая категория через запятую):</label>
         {{ form.categories2 }}
       </div>
     </div>
@@ -63,5 +63,23 @@
       document.getElementById("test_password").readOnly = false;
     }
   }
+</script>
+
+<script>
+  (() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+  })()
 </script>
 {% endblock %}

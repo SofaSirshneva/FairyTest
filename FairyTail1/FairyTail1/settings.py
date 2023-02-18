@@ -33,13 +33,14 @@ ALLOWED_HOSTS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'main.apps.MainConfig',
+    'tests.apps.TestsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.utils'
+    
 ]
 
 AUTH_USER_MODEL = 'main.CustomUser'

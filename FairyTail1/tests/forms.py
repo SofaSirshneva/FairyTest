@@ -1,0 +1,65 @@
+from django import forms
+from .models import Tests, Questions, Answers
+from django.forms.widgets import TextInput, RadioSelect, SelectMultiple, Textarea, PasswordInput
+
+class TestForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        PRIVATE =[
+            ('0','Открытый'),
+            ('1','Закрытый')
+        ]
+
+        self.fields["name"] = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+        self.fields["private"] = forms.ChoiceField(required=True, choices=PRIVATE,
+                                widget=RadioSelect({
+                                    'onchange' : 'defprivate()',
+                                }))
+
+        self.fields["password"] = forms.CharField(required=False,
+                                widget=PasswordInput({
+                                    'class' : 'form-control',
+                                    'id' : 'test_password'
+                                }))
+        self.fields["time_control"] = forms.IntegerField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+        self.fields["categories"] = forms.CharField(required=False,
+                                widget=SelectMultiple({
+                                    'class' : 'form-control',
+                                }))
+    
+    class Meta:
+        model = Tests
+        fields = ('name', 'private', 'password', 'time_control', 'categories')
+
+    categories2 = forms.CharField(required=False,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+class QuestionForm(forms.ModelForm):
+     text = forms.CharField(required=True,
+                                widget=Textarea({
+                                    'class' : 'form-control',
+                                    'rows' : 5,
+                                }))
+     class Meta:
+        model = Questions
+        fields = ('text',)
+
+class AnswerForm(forms.ModelForm):
+    text_content = forms.CharField(required=True,
+                                widget=TextInput({
+                                    'class' : 'form-control',
+                                }))
+
+    class Meta:
+        model = Answers
+        fields = ('text_content', 'correctness')
