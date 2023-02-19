@@ -11,24 +11,59 @@
 </head>
 <body>
   {% if request.user.is_authenticated %}
-    <div class="text-center success" > Вопрос {{ que_num }}</div>
-    <form method="post">
-      {% csrf_token %}
+  <div class="container">
+  <div class="row">
+    <div class="col-md-5 col-lg-4 order-md-last">
+      <div class="text-center success">
+        Навигация
+      </div>
+      {% if max %}
+        {% with ''|center:max  as range %}
+          {% for _ in range %}
+              <div class="text-center">
+                {% if que_num == forloop.counter %}
+                  <b> Вопрос {{forloop.counter}}</b>
+                {% else %}
+                  <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=0 %}"> Вопрос {{forloop.counter}}</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endwith %}
+      {% else %}
+      {% with ''|center:que_num  as range %}
+      {% for _ in range %}
+          <div class="text-center">
+            {% if que_num == forloop.counter %}
+              <b> Вопрос {{forloop.counter}}</b>
+            {% else %}
+              <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=0 %}"> Вопрос {{forloop.counter}}</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endwith %}
+      {% endif %}
+    </div>
     <div class="col-md-7 col-lg-8">
+    <form method="post">
+      {% csrf_token %} 
       <div class="row g-3 boxregistr">
+        <div class="text-center success col-sm-5"> Вопрос {{ que_num }}</div>
+      <div style="color: green; padding-top: 20px;" class="col-sm-5">{{message}}</div>
         <div class="col-sm-10">
           <label class="form-label">Формулировка вопроса*:</label>
           {{ form.text }}
         </div>
-        <div class="text-center success">Варианты ответа:</div>
-        <div class="error">{{ message}}</div>
-        <div class="col-sm-7" id="answers-list">
+        <div class="success">Варианты ответа:</div>
+        <div class="error">{{ errormessage}}</div>
+        <div class="col-sm-8" id="answers-list">
             {{ formset.management_form }}
             {% for form in formset %}
+            {{form.errors}}
               <div class="answer-form">
               {{ form.text_content }}
               <label class="form-label">Верный ответ:</label>
               {{ form.correctness }}
+              {{ form.id }}
             </div> 
             {% endfor %}
         </div> 
@@ -39,15 +74,21 @@
           {{ formset.empty_form.correctness }}
         </div>
           <br>
-          <button id="add-more" class="btn btn-success btn-lg col-sm-7" type="button">Добавить варианты ответа</button>
+          <button id="add-more" class="btn btn-success col-sm-5" type="button">Добавить варианты ответа</button>
+          <button class="btn btn-primary col-sm-5 foottitle" type="submit">Сохранить вопрос</button>
+      </div>
+      <br>
+      <div class="text-center">
+        <a href="{% url 'addquestion' que_slug=que_slug que_num=max max=0 %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        <button class="btn btn-primary btn-lg boxregistr" type="button">Сохранить тест</button>
       </div>
     </div>
-    <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit">Перейти к следующему вопросу</button>
-      <button class="btn btn-success btn-lg" type="button">Сохранить</button></div>
   </form>
+</div>
+</div>
   {% else %}
   <div class="text-center success">Сначала необходимо авторизироваться</div>
-  <p style="text-align: center;"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
+  <p class="text-center"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
   {% endif %}
 </body>
 

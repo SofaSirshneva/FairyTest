@@ -8,6 +8,7 @@ class Answers(models.Model):
 
 class Questions(models.Model):
     text = models.TextField()
+    number = models.IntegerField(null=True)
     test = models.ForeignKey('Tests', on_delete=models.PROTECT, default='', null=True)
 
 class Tests(models.Model):
