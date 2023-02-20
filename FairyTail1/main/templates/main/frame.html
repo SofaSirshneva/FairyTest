@@ -91,9 +91,9 @@
         <strong>{{ user.username }}</strong>
       </a>
       <ul class="dropdown-menu dropdown-menu-dark text-xl-center shadow">
-        <li><a class="dropdown-item"  target="iframe" href="#">Мой профиль</a></li>
+        <li><a class="dropdown-item" href="{% url 'profile' %}">Мой профиль</a></li>
         <li><a class="dropdown-item"  target="iframe" href="#">Настройки профиля</a></li>
-        <li><a class="dropdown-item"  target="iframe" href="#">Выйти</a></li>
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
       </ul>
     </div>
     {% else %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tests, Questions, Answers
+from .models import Tests, Questions, Answers, Categories
 from django.forms.widgets import TextInput, RadioSelect, SelectMultiple, Textarea, PasswordInput
 
 class TestForm(forms.ModelForm):
@@ -10,7 +10,7 @@ class TestForm(forms.ModelForm):
             ('0','Открытый'),
             ('1','Закрытый')
         ]
-
+    
         self.fields["name"] = forms.CharField(required=True,
                                 widget=TextInput({
                                     'class' : 'form-control',
@@ -26,23 +26,33 @@ class TestForm(forms.ModelForm):
                                     'class' : 'form-control',
                                     'id' : 'test_password'
                                 }))
-        self.fields["time_control"] = forms.IntegerField(required=True,
+        self.fields["time_control"] = forms.IntegerField(required=True, 
                                 widget=TextInput({
                                     'class' : 'form-control',
                                 }))
-        self.fields["categories"] = forms.CharField(required=False,
-                                widget=SelectMultiple({
-                                    'class' : 'form-control',
-                                }))
-    
     class Meta:
         model = Tests
-        fields = ('name', 'private', 'password', 'time_control', 'categories')
+        fields = ('name', 'private', 'password', 'time_control')
 
     categories2 = forms.CharField(required=False,
                                 widget=TextInput({
                                     'class' : 'form-control',
                                 }))
+
+    categories = Categories.objects.all()
+    CATEGORY = ()
+
+    for category in categories:
+        CATEGORIES=[category.id]
+        CATEGORIES.append(category.name)
+        CAT=tuple(CATEGORIES)
+        CATEGORY+=CAT,
+
+    categories1 = forms.MultipleChoiceField(required=False, choices = CATEGORY,
+                                widget=SelectMultiple({
+                                    'class' : 'form-control',
+                                }))
+    
 
 class QuestionForm(forms.ModelForm):
      text = forms.CharField(required=True,

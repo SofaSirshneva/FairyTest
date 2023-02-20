@@ -4,7 +4,6 @@ from main.models import CustomUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 from django.forms.widgets import DateInput, Select, PasswordInput, CheckboxInput, FileInput, TextInput, EmailInput
 from django.contrib.auth.password_validation import validate_password
-from django.forms import modelformset_factory
 
 class DateInput(forms.DateInput):
     input_type = 'date'

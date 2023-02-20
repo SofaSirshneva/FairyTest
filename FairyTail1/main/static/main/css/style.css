@@ -172,3 +172,18 @@ a:hover{
   color: rgb(0, 12, 185);
   font-size: 40px;
 }
+
+.profile-ava{
+  margin-top: 5%;
+}
+
+.info-user{
+  font-size:20px;
+  padding-top: 40px;
+}
+
+.profile-head{
+  font-size: 27px;
+  color: rgb(0, 12, 185);
+  padding-top: 20px;
+}

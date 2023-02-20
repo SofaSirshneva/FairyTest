@@ -24,7 +24,7 @@
                 {% if que_num == forloop.counter %}
                   <b> Вопрос {{forloop.counter}}</b>
                 {% else %}
-                  <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=0 %}"> Вопрос {{forloop.counter}}</a>
+                  <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
                 {% endif %}
               </div>
             {% endfor %}
@@ -36,7 +36,7 @@
             {% if que_num == forloop.counter %}
               <b> Вопрос {{forloop.counter}}</b>
             {% else %}
-              <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=0 %}"> Вопрос {{forloop.counter}}</a>
+              <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
             {% endif %}
           </div>
         {% endfor %}
@@ -79,8 +79,9 @@
       </div>
       <br>
       <div class="text-center">
-        <a href="{% url 'addquestion' que_slug=que_slug que_num=max max=0 %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
-        <button class="btn btn-primary btn-lg boxregistr" type="button">Сохранить тест</button>
+        <a href="{% url 'addquestion' que_slug=que_slug que_num=max max=max %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        <button class="btn btn-primary btn-lg boxregistr" type="button" onclick="save({{max}})">Сохранить тест</button>
+        <input type="hidden" id="Url" data-url="{% url 'main' %}" />
       </div>
     </div>
   </form>
@@ -114,5 +115,21 @@
         newForms.setAttribute('value', count+1)
         copyDiv.append(emptyEl)
       }
+</script>
+
+<script>
+  function save(max){
+    if (max < 5)
+      {result = confirm('Тест должен содержать как минимум 5 вопросов. Ваш тест будет сохранен, но не будет опубликован. Подтвердить?');
+      if (result)
+        var url = $("#Url").attr("data-url");
+        window.location.replace(url);}
+    else{
+      result = confirm('Тест будет сохранен и опубликован. Вы можете поменять это в настройках');
+      if (result)
+        var url = $("#Url").attr("data-url");
+        window.location.replace(url);
+    }
+  }
 </script>
 {% endblock %}
