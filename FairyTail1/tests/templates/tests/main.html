@@ -18,7 +18,7 @@
         </tr>
         <tr>
             <td>
-                <table>
+                <table class="text-center" cellpadding="10">
                     <tr class="text-center">
                         <td class="pop"></td>
                         <td class="pop lowborder">
@@ -38,6 +38,27 @@
                         </td>
                         <td class="pop"></td>
                     </tr>
+                    {% for test in object_list %}
+                        <tr >
+                            <td class="pop"></td>
+                            <td class="pop lowborder">
+                                {{ forloop.counter }}
+                            </td>
+                            <td class="lowborder" style="width:400px">
+                               <a href="#">{{test.name}}</a>
+                            </td>
+                            <td class="lowborder" style="width:200px">
+                                {{ test.number_of_passes }}
+                            </td>
+                            <td class="lowborder" style="width:200px">
+                                {{test.average_result}}
+                            </td>
+                            <td class="lowborder" style="width:200px">
+                                {{test.rating}}
+                            </td>
+                            <td class="pop"></td>
+                        </tr>
+                    {% endfor %}
                 </table>
             </td>
         </tr>

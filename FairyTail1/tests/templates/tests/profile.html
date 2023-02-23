@@ -39,7 +39,7 @@
         <div class="row info-user">
             <ul>
             {% for test in object_list %}
-                <li>{{test.name}}</li>
+                <li><a href="{% url 'updatetest' test.slug %}">{{test.name}}</a></li>
             {% endfor %}
         </ul>
         </div>

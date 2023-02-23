@@ -16,14 +16,6 @@ from django.template.loader import get_template
 from django.http import HttpResponse
 from django.core.mail import EmailMessage
 
-class MainPage(TemplateView):
-    template_name='main/main.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Главная'
-        return context
-
 class Error404Page(TemplateView):
     template_name='main/error404.html'
 

@@ -39,7 +39,7 @@ class TestForm(forms.ModelForm):
                                     'class' : 'form-control',
                                 }))
 
-    categories = Categories.objects.all()
+    categories = Categories.objects.all().order_by('name')
     CATEGORY = ()
 
     for category in categories:

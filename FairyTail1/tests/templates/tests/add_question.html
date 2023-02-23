@@ -24,7 +24,7 @@
                 {% if que_num == forloop.counter %}
                   <b> Вопрос {{forloop.counter}}</b>
                 {% else %}
-                  <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
+                  <a href="{% url 'updatequestion' test_slug=que_slug que_num=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
                 {% endif %}
               </div>
             {% endfor %}
@@ -36,7 +36,7 @@
             {% if que_num == forloop.counter %}
               <b> Вопрос {{forloop.counter}}</b>
             {% else %}
-              <a href="{% url 'updatequestion' qslug=que_slug qnum=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
+              <a href="{% url 'updatequestion' test_slug=que_slug que_num=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
             {% endif %}
           </div>
         {% endfor %}
@@ -79,7 +79,11 @@
       </div>
       <br>
       <div class="text-center">
-        <a href="{% url 'addquestion' que_slug=que_slug que_num=max max=max %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        {% if max %}
+        <a href="{% url 'addquestion' test_slug=que_slug que_num=max %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        {% else %}
+        <a href="{% url 'addquestion' test_slug=que_slug que_num=1 %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        {% endif %}
         <button class="btn btn-primary btn-lg boxregistr" type="button" onclick="save({{max}})">Сохранить тест</button>
         <input type="hidden" id="Url" data-url="{% url 'main' %}" />
       </div>
