@@ -14,7 +14,7 @@
        <b class="profile-head" >{{ first_letter.grouper|capfirst }}</b>
         <ul>
             {% for category in first_letter.list %}
-              <li><a href="#">{{ category.name|capfirst }}</a></li>
+              <li><a href="{% url 'category' category.name %}">{{ category.name|capfirst }}</a></li>
             {% endfor %}
         </ul>
         </li>

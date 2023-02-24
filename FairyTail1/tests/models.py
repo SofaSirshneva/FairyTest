@@ -1,14 +1,14 @@
 from django.db import models
 
 class Answers(models.Model):
-    text_content = models.TextField(null=True)
-    image_content=models.ImageField(upload_to='photos/%Y/%m/%d/', null=True)
+    text_content = models.TextField()
     correctness = models.BooleanField(default=False)
     question = models.ForeignKey('Questions', on_delete=models.PROTECT)
 
 class Questions(models.Model):
     text = models.TextField()
     number = models.IntegerField()
+    type = models.IntegerField(default=1)
     test = models.ForeignKey('Tests', on_delete=models.PROTECT)
 
 class Tests(models.Model):

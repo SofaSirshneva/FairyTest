@@ -44,7 +44,7 @@ class TestForm(forms.ModelForm):
 
     for category in categories:
         CATEGORIES=[category.id]
-        CATEGORIES.append(category.name)
+        CATEGORIES.append(category.name.capitalize)
         CAT=tuple(CATEGORIES)
         CATEGORY+=CAT,
 

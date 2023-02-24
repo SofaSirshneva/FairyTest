@@ -1,0 +1,60 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>
+    {{ title }}
+  </title>
+</head>
+<body>
+  {% if object_list %}
+  <div class="heading text-center mb">{{ title|capfirst }}</div>
+  <table class="text-center" cellpadding="10">
+    <tr class="text-center">
+        <td class="pop"></td>
+        <td class="pop lowborder">
+            №
+        </td>
+        <td class="lowborder" style="width:400px">
+            Название
+        </td>
+        <td class="lowborder" style="width:200px">
+            Количество прохождений
+        </td>
+        <td class="lowborder" style="width:200px">
+            Средний результат
+        </td>
+        <td class="lowborder" style="width:200px">
+            Рейтинг
+        </td>
+        <td class="pop"></td>
+    </tr>
+    {% for test in object_list %}
+        <tr >
+            <td class="pop"></td>
+            <td class="pop lowborder">
+                {{ forloop.counter }}
+            </td>
+            <td class="lowborder" style="width:400px">
+               <a href="{% url 'testinfo' test.name %}">{{test.name}}</a>
+            </td>
+            <td class="lowborder" style="width:200px">
+                {{ test.number_of_passes }}
+            </td>
+            <td class="lowborder" style="width:200px">
+                {{test.average_result}}
+            </td>
+            <td class="lowborder" style="width:200px">
+                {{test.rating}}
+            </td>
+            <td class="pop"></td>
+        </tr>
+    {% endfor %}
+    {% else %}
+    <div class="text-center success">Тут пока нет тестов</div>
+    <p style="text-align: center;"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
+    {% endif %}
+</table>
+</body>
+{% endblock %}

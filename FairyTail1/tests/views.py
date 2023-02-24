@@ -2,7 +2,7 @@ from django.forms import modelformset_factory
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from .forms import TestForm, QuestionForm, AnswerForm
 from django.shortcuts import redirect
 from pytils.translit import slugify
@@ -40,6 +40,44 @@ def add_categories(form, test):
                 test.save()
             except:
                 test.save()
+
+def check_answers(question, formset):
+    correct = False
+
+    for form in formset:
+        answer = form.save(commit=False)
+
+        if answer.correctness:
+            correct = True
+            break
+        else:
+            pass
+
+    if not correct:
+        return False
+    
+    number_of_correct = 0
+    number_of_answers = 0
+
+    for form in formset:
+        answer = form.save(commit=False)
+        answer.question = question
+
+        if answer.correctness:
+            number_of_correct+=1
+        number_of_answers+=1
+
+        answer.save()
+
+    if number_of_answers==1:
+        question.type = 0
+    elif number_of_correct==1:
+        question.type = 1
+    else:
+        question.type = 2
+
+    question.save()
+    return True
 
 class TestCreatePage(CreateView):
     form_class = TestForm
@@ -82,37 +120,7 @@ def add_question(request, test_slug, que_num):
         test = Tests.objects.get(slug = test_slug)
         question.test = test
         question.number = que_num
-        correct = False
-
-        for form in formset:
-            answer = form.save(commit=False)
-
-            if answer.correctness:
-                correct = True
-                break
-            else:
-                pass
-
-        if not correct:
-
-            context = {
-                'title': 'Создание теста',
-                'form': form1,
-                'formset': formset,
-                'que_num': que_num,
-                'que_slug': test_slug,
-                'max': max,
-                'errormessage': 'Не отмечен ни один правильный ответ'
-            }
-
-            return render(request, 'tests/add_question.html', context)
-
         question.save()
-
-        for form in formset:
-            answer = form.save(commit=False)
-            answer.question = question
-            answer.save()
 
         test = Tests.objects.get(slug = test_slug)
         questions = Questions.objects.filter(test=test.pk)
@@ -124,11 +132,17 @@ def add_question(request, test_slug, que_num):
                 'formset': formset,
                 'que_num': que_num,
                 'que_slug': test_slug,
-                'max': max['number__max'],
-                'message': 'Вопрос сохранен'
+                'max': max['number__max']
             }
 
-        return render(request, 'tests/add_question.html', context)    
+        if not check_answers(question, formset):
+            context['errormessage'] = 'Не отмечен ни один правильный ответ'
+            question.delete()
+            return render(request, 'tests/add_question.html', context)    
+        else:
+            context['message'] = 'Вопрос сохранен'
+            return render(request, 'tests/add_question.html', context)    
+        
     else:
         test = Tests.objects.get(slug = test_slug)
         questions = Questions.objects.filter(test=test.pk)
@@ -159,27 +173,24 @@ def update_question(request, test_slug, que_num, max):
 
         question.text = form1.cleaned_data['text']
         question.save(update_fields=["text"])
-        correct = False
 
-        for form in formset:
-            answer = form.save(commit=False)
-            if answer.correctness:
-                correct = True
-                break
+        context = {
+                'title': 'Создание теста',
+                'form': form1,
+                'formset': formset,
+                'que_num': que_num,
+                'que_slug': test_slug,
+                'max': max['number__max']
+            }
 
-        if not correct:
-            return render(request, 'tests/add_question.html', { 'title': 'Создание теста', 'form': form1, 'formset': formset,
-                'que_num': que_num, 'que_slug': test_slug, 'max': max,'errormessage': 'Не выбран ни один правильный ответ'})
-
-        for form in formset:
-            answer = form.save(commit=False)
-            answer.question = question
-
-            if answer.text_content:
-                answer.save()
-
-        return render(request, 'tests/add_question.html',  {'title': 'Создание теста', 'form': form1, 'formset': formset, 
-            'que_num': que_num, 'que_slug': test_slug, 'max': max, 'message': 'Вопрос сохранен'})
+        if not check_answers(question, formset):
+            context['errormessage'] = 'Не отмечен ни один правильный ответ'
+            question.delete()
+            return render(request, 'tests/add_question.html', context)    
+        else:
+            context['message'] = 'Вопрос сохранен'
+            return render(request, 'tests/add_question.html', context)    
+        
     else:
         context = {
                 'title': 'Создание теста',
@@ -248,6 +259,43 @@ class CategoriesPage(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Категории'
+        return context
+    
+class TestInfoPage(DetailView):
+    model = Tests
+    template_name = 'tests/test_info.html'
+
+    def get_object(self):
+        return Tests.objects.get(name=self.kwargs['name'])
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.kwargs['name']
+        return context
+    
+class CategoryPage(ListView):
+    model = Tests
+    template_name = 'tests/category.html'
+
+    def get_queryset(self):
+        return Tests.objects.filter(categories=Categories.objects.get(name=self.kwargs['name'])).order_by('-rating')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.kwargs['name']
+        return context
+    
+class TestPassPage(ListView):
+    model = Questions
+    paginate_by = 1
+    template_name = 'tests/passing_test.html'
+
+    def get_queryset(self):
+        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).order_by('?')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Прохождение теста'
         return context
 
 

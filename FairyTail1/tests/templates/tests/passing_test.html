@@ -1,0 +1,40 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
+  <title>
+    {{ title }}
+  </title>
+</head>
+<body>
+      <div class="text-center heading"> Вопрос {{ page_obj.number }}</div>
+      {% for question in page_obj %}
+        <div class="question">{{question.text }}</div> 
+        {% if question.type == 0 %}
+          <input type="text" class="form-control inputanswer" style="width: 60%;">
+        {% elif question.type == 1 %}
+          {% for answer in question.answers_set.all %}
+            <label class="answers"><input type="radio" name="answer" class="mr">{{ answer.text_content }}</label>
+            <br>
+          {% endfor %}
+        {% else %}
+          {% for answer in question.answers_set.all %}
+            <label class="answers"><input type="checkbox" class="mr">{{ answer.text_content }}</label>
+            <br>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+          
+          <button id="add-more" class="btn btn-success col-sm-5" type="button">Добавить варианты ответа</button>
+          <button class="btn btn-primary col-sm-5 foottitle" type="submit">Сохранить вопрос</button>
+      </div>
+      <br>
+      <div class="text-center">
+        <button class="btn btn-primary btn-lg boxregistr" type="button">Сохранить тест</button>
+      </div>
+</body>
+{% endblock %}
