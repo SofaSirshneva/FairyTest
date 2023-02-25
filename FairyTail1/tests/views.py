@@ -291,7 +291,7 @@ class TestPassPage(ListView):
     template_name = 'tests/passing_test.html'
 
     def get_queryset(self):
-        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).order_by('?')
+        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).order_by('number')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

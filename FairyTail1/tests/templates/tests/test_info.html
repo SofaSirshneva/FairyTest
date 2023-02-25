@@ -41,7 +41,7 @@
                     </div>
                 {% else %}
                     <a><button class="btn btn-success btn-lg" type="button" onclick="checkpassword('{{object.password}}')">Перейти к прохождению теста</button></a>
-                    <input type="hidden" id="Url" data-url="{% url 'testpassing'test.slug %}"/>
+                    <input type="hidden" id="Url" data-url="{% url 'testpassing' object.slug %}"/>
                 {% endif %}
             {% else %}
                 <div style="color:red; font-size: 30px;">

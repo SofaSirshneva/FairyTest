@@ -27,14 +27,17 @@
           {% endfor %}
         {% endif %}
       {% endfor %}
-
-          
-          <button id="add-more" class="btn btn-success col-sm-5" type="button">Добавить варианты ответа</button>
-          <button class="btn btn-primary col-sm-5 foottitle" type="submit">Сохранить вопрос</button>
-      </div>
+      <div class="answers col-sm-4">
+      {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}"><button class="btn btn-primary col-sm-5" type="button">Предыдущий вопрос</button></a>
+      {% endif %}
+      {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"><button class="btn btn-success col-sm-5" type="button">Следующий вопрос</button></a>
+      {% endif %}
+    </div>
       <br>
       <div class="text-center">
-        <button class="btn btn-primary btn-lg boxregistr" type="button">Сохранить тест</button>
+        <button class="btn btn-primary btn-lg boxregistr" type="submit">Отправить тест</button>
       </div>
 </body>
 {% endblock %}
