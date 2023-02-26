@@ -32,3 +32,8 @@ class Test_results(models.Model):
     test=models.ForeignKey('Tests', on_delete=models.PROTECT)
     user=models.ForeignKey('main.CustomUser', on_delete=models.PROTECT)
     result=models.FloatField()
+
+class Question_results(models.Model):
+    question=models.ForeignKey('Questions', on_delete=models.PROTECT)
+    user=models.ForeignKey('main.CustomUser', on_delete=models.PROTECT)
+    answer=models.CharField(null=True, max_length=255)

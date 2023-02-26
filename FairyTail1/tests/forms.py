@@ -1,6 +1,6 @@
 from django import forms
 from .models import Tests, Questions, Answers, Categories
-from django.forms.widgets import TextInput, RadioSelect, SelectMultiple, Textarea, PasswordInput
+from django.forms.widgets import TextInput, RadioSelect, SelectMultiple, Textarea, PasswordInput, CheckboxSelectMultiple
 
 class TestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -73,3 +73,26 @@ class AnswerForm(forms.ModelForm):
     class Meta:
         model = Answers
         fields = ('text_content', 'correctness')
+
+class TestPassForm(forms.Form):
+     
+     def __init__(self, question,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        ANSWER=()
+        for answer in question.answers_set.all():
+            ANSWERS=[answer.id]
+            ANSWERS.append(answer.text_content)
+            AN=tuple(ANSWERS)
+            ANSWER+=AN,
+
+        self.fields['radio_answer'] = forms.ChoiceField(choices=ANSWER, required=False,  widget=RadioSelect({
+                                    'class' : 'mr answers'
+                                    }))
+        self.fields['checkbox_answer'] = forms.MultipleChoiceField(choices=ANSWER, required=False, widget=CheckboxSelectMultiple({
+                                    'class' : 'mr answers'
+                                    }))
+
+     string_answer = forms.CharField(required=False,
+                                     widget=TextInput({
+                                        'class' : 'form-control inputanswer',
+                                     }))

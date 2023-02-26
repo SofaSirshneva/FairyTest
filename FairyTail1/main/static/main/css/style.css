@@ -195,7 +195,7 @@ a:hover{
 
 .answers{
   font-size: 18px;
-  margin-left: 20%;
+  margin-left: 130px;
   margin-top: 10px;
 }
 
@@ -214,6 +214,6 @@ input[type=checkbox]
 }
 
 .inputanswer{
-  margin-left: 20%;
+  margin-left: 30%;
   margin-top: 10px;
 }

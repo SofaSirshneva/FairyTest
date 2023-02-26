@@ -1,12 +1,13 @@
+import json
 from django.forms import modelformset_factory
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
-from .forms import TestForm, QuestionForm, AnswerForm
+from .forms import TestForm, QuestionForm, AnswerForm, TestPassForm
 from django.shortcuts import redirect
 from pytils.translit import slugify
-from .models import Questions, Tests, Answers, Categories
+from .models import Questions, Tests, Answers, Categories, Question_results
 from django.db.models import Max
 from django.db.models.functions import Substr, Upper
 
@@ -285,18 +286,66 @@ class CategoryPage(ListView):
         context['title'] = self.kwargs['name']
         return context
     
-class TestPassPage(ListView):
+class TestPassPage(DetailView):
     model = Questions
-    paginate_by = 1
+    form_class = TestPassForm
     template_name = 'tests/passing_test.html'
 
-    def get_queryset(self):
-        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).order_by('number')
+    def get_object(self):
+        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number'])
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Прохождение теста'
+        context['slug'] = self.kwargs['slug']
+        context['previous_number'] = self.kwargs['number']-1
+
+        try:
+            next_question = Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number']+1)
+        except:
+            next_question = None
+        context['next_number'] = next_question
+
+        result, created = Question_results.objects.get_or_create(user = self.request.user, question = self.object)
+
+        initial_dict = {
+            'string_answer': result.answer,
+            'radio_answer': result.answer,
+        }
+
+        context['checkbox_answer'] = json.dumps(result.answer)
+        context['form'] = TestPassForm(question=self.object, initial = initial_dict)
+
         return context
-
-
     
+    def post(self, request, slug, number):
+        object = Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number'])
+        result, created = Question_results.objects.get_or_create(user = request.user, question = object)
+        form = TestPassForm(object, request.POST)
+
+        if form.is_valid():
+            if object.type == 0:
+                result.answer = form.cleaned_data['string_answer']
+
+            elif object.type == 1:
+                result.answer = form.cleaned_data['radio_answer']
+
+            else:
+                result.answer = form.cleaned_data['checkbox_answer']
+
+            result.save()
+
+        if 'previous' in request.POST:
+            number-=1
+            return redirect(reverse('testpassing', kwargs={'slug': slug, 'number': number}))
+        
+        elif 'next' in request.POST:
+            number+=1
+            return redirect(reverse('testpassing', kwargs={'slug': slug, 'number': number}))
+        
+        else:
+            return redirect('main')
+
+
+
+
