@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg mtext" aria-label="Main navigation">
+        <div class="container-fluid" >
+          <a type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"> 
+            <img src="{% static 'main/img/logo.png' %}" width="80px">
+          </a>
+
+            <a class="heading" target="iframe" href="{% url 'main' %}">FairyTest</a>
+            <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></span>
+            </button>
+            <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="menulink" aria-current="page" href="{% url 'main' %}">Главная</a>
+                </li>
+                <li class="nav-item">
+                  <a class="menulink" href="{% url 'categories' %}">Категории</a>
+                </li>
+                <li class="nav-item">
+                  <a class="menulink" href="#">Рейтинг</a>
+                </li>
+              </ul>
+
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Поиск..." aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+              </form>
+              {% if request.user.is_authenticated %}
+              <div class="menulink">
+                <a href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Выйти</button></a>
+              </div>
+              {% else %}
+              <div class="menulink">
+                <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
+                <a href="{% url 'registration' %}"><button type="button" class="btn btn-primary">Зарегистрироваться</button></a>
+              </div>
+              {% endif %}
+                </div>
+              </div>
+      </nav>
+      <hr class="hr-shelf">
+      <div class="box">
+        {% block content %}
+      
+        {% endblock %}
+      </div>
+      <div class="offcanvas myoffcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+          <div class="heading">Менюшка</div>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <hr class="hr-shelf">
+        <div class="offcanvas-body">
+          <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item" style="margin-bottom: 20px">
+              <a href="#" class="menulink2" aria-current="page">
+                <img src="{% static 'main/img/hist.png' %}" width="12%" margin-right="30px">
+                 История
+              </a>
+            </li>
+            <li style="margin-bottom: 20px">
+              <a href="#" class="menulink2">
+                <img src="{% static 'main/img/stat.png' %}" width="12%" margin-right="30px">
+                Статистика
+              </a>
+            </li>
+            <li style="margin-bottom: 20px">
+              <a href="#" class="menulink2">
+                <img src="{% static 'main/img/settings.png' %}" width="12%" margin-right="30px">
+                Настройки
+               </a>
+            </li>
+          </ul>
+
+    <div style="margin-top:390px">
+    <hr class="hr-shelf">
+    {% if request.user.is_authenticated %}
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="media/{{ user.avatar }}" alt="" width="40" height="40" class="rounded-circle me-2">
+        <strong>{{ user.username }}</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-xl-center shadow">
+        <li><a class="dropdown-item" href="{% url 'profile' %}">Мой профиль</a></li>
+        <li><a class="dropdown-item"  target="iframe" href="#">Настройки профиля</a></li>
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+      </ul>
+    </div>
+    {% else %}
+    <a class="menulink2" href="{% url 'login' %}">Войти</a>
+    {% endif %}
+  </div>
+        </div>
+      </div>
+
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <div class="heading menu">FairyTest</div>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="menulink mt" href="{% url 'main' %}">Главная</a>
+                </li>
+                <li class="nav-item">
+                  <a class="menulink mt" href="{% url 'categories' %}">Категории</a>
+                </li>
+                <li class="nav-item">
+                  <a class="menulink mt" href="#">Рейтинг</a>
+                </li>
+              </ul>
+              <form class="d-flex menulink mt" role="search">
+                <input class="form-control me-2" type="search" placeholder="Поиск..." aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Найти</button>
+              </form>
+              <div class="menulink mt">
+                {% if request.user.is_authenticated %}
+              <div class="menulink">
+                <a href="{% url 'logout' %}"><button type="button" class="btn btn-danger">Выйти</button></a>
+              </div>
+              {% else %}
+              <div class="menulink">
+                <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Войти</button></a>
+                <a href="{% url 'registration' %}"><button type="button" class="btn btn-primary">Зарегистрироваться</button></a>
+              </div>
+              {% endif %}
+                </div>
+            </div>
+      </div>
+
+      <div style="margin-top: 80px;">
+        <hr class="hr-shelf">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center">
+          <div class="col-md-4 d-flex align-items-center foottitle">
+              <img src="{% static 'main/img/logo.png' %}" width="40px">
+            <span class="mb-3 mb-md-0 text-muted">&copy; 2023 FairyTest, Inc</span>
+          </div>
+
+          <ul class="nav col-md-4 justify-content-end list-unstyled d-flex footicon">
+            <li class="ms-3"> <img src="{% static 'main/img/twitter.png' %}" width="40px"></li>
+            <li class="ms-3"> <img src="{% static 'main/img/vk.png' %}" width="40px"></li>
+            <li class="ms-3"> <img src="{% static 'main/img/inst.png' %}" width="40px"></li>
+          </ul>
+        </footer>
+      </div> 
+</body>
+</html>

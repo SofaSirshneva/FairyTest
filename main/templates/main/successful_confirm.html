@@ -1,0 +1,18 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    
+    {% if is_active %}
+        <div class="text-center success">Поздравляем с успешной регистрацией!!</div>
+        <p style="text-align: center;"><img src = "{% static 'main/img/successpic.jpeg' %}" width="55%"></p>
+    {% else %}
+    <div class="text-center success">Что-то пошло не так...</div>
+    <p style="text-align: center;"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
+    {% endif %}
+</body>
+{% endblock %}

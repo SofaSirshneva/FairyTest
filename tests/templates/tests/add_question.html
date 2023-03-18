@@ -1,0 +1,139 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
+  <title>
+    {{ title }}
+  </title>
+</head>
+<body>
+  {% if request.user.is_authenticated %}
+  <div class="container">
+  <div class="row">
+    <div class="col-md-5 col-lg-4 order-md-last">
+      <div class="text-center success">
+        Навигация
+      </div>
+      {% if max %}
+        {% with ''|center:max  as range %}
+          {% for _ in range %}
+              <div class="text-center">
+                {% if que_num == forloop.counter %}
+                  <b> Вопрос {{forloop.counter}}</b>
+                {% else %}
+                  <a href="{% url 'updatequestion' test_slug=que_slug que_num=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% endwith %}
+      {% else %}
+      {% with ''|center:que_num  as range %}
+      {% for _ in range %}
+          <div class="text-center">
+            {% if que_num == forloop.counter %}
+              <b> Вопрос {{forloop.counter}}</b>
+            {% else %}
+              <a href="{% url 'updatequestion' test_slug=que_slug que_num=forloop.counter max=max %}"> Вопрос {{forloop.counter}}</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% endwith %}
+      {% endif %}
+    </div>
+    <div class="col-md-7 col-lg-8">
+    <form method="post">
+      {% csrf_token %} 
+      <div class="row g-3 boxregistr">
+        <div class="text-center success col-sm-5"> Вопрос {{ que_num }}</div>
+      <div style="color: green; padding-top: 20px;" class="col-sm-5">{{message}}</div>
+        <div class="col-sm-10">
+          <label class="form-label">Формулировка вопроса*:</label>
+          {{ form.text }}
+        </div>
+        <div class="success">Варианты ответа:</div>
+        <div class="error">{{ errormessage}}</div>
+        <div class="col-sm-8" id="answers-list">
+            {{ formset.management_form }}
+            {% for form in formset %}
+            {{form.errors}}
+              <div class="answer-form">
+              {{ form.text_content }}
+              <label class="form-label">Верный ответ:</label>
+              {{ form.correctness }}
+              {{ form.id }}
+            </div> 
+            {% endfor %}
+        </div> 
+        <div id="empty_form" style="display: none;">
+          <br>
+          {{ formset.empty_form.text_content }}
+          <label class="form-label">Верный ответ:</label>
+          {{ formset.empty_form.correctness }}
+        </div>
+          <br>
+          <button id="add-more" class="btn btn-success col-sm-5" type="button">Добавить варианты ответа</button>
+          <button class="btn btn-primary col-sm-5 foottitle" type="submit">Сохранить вопрос</button>
+      </div>
+      <br>
+      <div class="text-center">
+        {% if max %}
+        <a href="{% url 'addquestion' test_slug=que_slug que_num=max %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        {% else %}
+        <a href="{% url 'addquestion' test_slug=que_slug que_num=1 %}"><button class="btn btn-outline-success btn-lg foottitle" type="button">Добавить вопрос</button></a>
+        {% endif %}
+        <button class="btn btn-primary btn-lg boxregistr" type="button" onclick="save({{max}})">Сохранить тест</button>
+        <input type="hidden" id="Url" data-url="{% url 'main' %}" />
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+  {% else %}
+  <div class="text-center success">Сначала необходимо авторизироваться</div>
+  <p class="text-center"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
+  {% endif %}
+</body>
+
+<script>
+      const addMoreBtn = document.getElementById('add-more')
+      const newForms = document.getElementById('id_form-TOTAL_FORMS')
+      addMoreBtn.addEventListener('click', add_new_form)
+
+      function add_new_form(event){
+        if(event){
+          event.preventDefault()
+        }
+        const countForm = document.getElementsByClassName('answer-form')
+        var count = countForm.length
+        const copyDiv = document.getElementById('answers-list')
+        const emptyEl = document.getElementById('empty_form').cloneNode(true)
+        emptyEl.setAttribute('style', 'display:initial')
+        emptyEl.setAttribute('class', 'answer-form')
+        emptyEl.setAttribute('id', `form-${count}`)
+        const regex = new RegExp('__prefix__', 'g')
+        emptyEl.innerHTML = emptyEl.innerHTML.replace(regex, count)
+        console.log(count)
+        newForms.setAttribute('value', count+1)
+        copyDiv.append(emptyEl)
+      }
+</script>
+
+<script>
+  function save(max){
+    if (max < 5)
+      {result = confirm('Тест должен содержать как минимум 5 вопросов. Ваш тест будет сохранен, но не будет опубликован. Подтвердить?');
+      if (result)
+        var url = $("#Url").attr("data-url");
+        window.location.replace(url);}
+    else{
+      result = confirm('Тест будет сохранен и опубликован. Вы можете поменять это в настройках');
+      if (result)
+        var url = $("#Url").attr("data-url");
+        window.location.replace(url);
+    }
+  }
+</script>
+{% endblock %}

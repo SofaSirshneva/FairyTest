@@ -1,0 +1,26 @@
+{% extends "main/frame.html" %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div class="heading text-center mb">Категории</div>
+    <div style="margin-left: 15%;">
+    {% regroup object_list by first_letter as first_letter_categories %}
+    <div class="row">
+    {% for first_letter in first_letter_categories %}
+    <div class="col-md-4 mb mt">
+       <b class="profile-head" >{{ first_letter.grouper|capfirst }}</b>
+        <ul>
+            {% for category in first_letter.list %}
+              <li><a href="{% url 'category' category.name %}">{{ category.name|capfirst }}</a></li>
+            {% endfor %}
+        </ul>
+        </li>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+</body>
+{% endblock %}

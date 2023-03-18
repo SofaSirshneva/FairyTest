@@ -1,0 +1,86 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>
+    {{ title }}
+  </title>
+</head>
+<body>
+  {% if request.user.is_authenticated %}
+    <div class="text-center success">Создание теста</div>
+    <form method="post" class="needs-validation">
+      {% csrf_token %}
+      {{ form.errors }}
+    <div class="col-md-7 col-lg-8">
+      <div class="row g-3 boxregistr">
+        <div class="col-sm-10">
+          <label class="form-label">Название теста*:</label>
+          {{ form.name }}
+        </div>
+        <div class="col-sm-5">
+          <label class="form-label">Тип теста*:</label><br>
+          <div class="foottitle">
+          {% for radio in form.private %}
+            {{ radio.tag }}
+            {{ radio.choice_label }}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-sm-5">
+        <label class="form-label">Пароль:</label><br>   
+        {{ form.password }}
+      </div>
+      <div class="col-sm-10">
+        <label class="form-label">Контроль времени (в минутах)*:</label>
+        {{ form.time_control }}
+      </div>
+      <div class="col-sm-10">
+        <label class="form-label">Категории (для выбора нескольких категорий удерживайте CTRL):</label>
+        {{ form.categories1 }}
+      </div>
+      <div class="col-sm-10">
+        <label class="form-label">Вы также можете добавить свои категории (каждая категория через запятую):</label>
+        {{ form.categories2 }}
+      </div>
+    </div>
+    </div>
+    <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit">Подтвердить</button></div>
+  </form>
+  {% else %}
+  <div class="text-center success">Сначала необходимо авторизироваться</div>
+  <p style="text-align: center;"><img src = "{% static 'main/img/404.png' %}" width="55%"></p>
+  {% endif %}
+</body>
+
+<script>
+  function defprivate(){
+    if (document.getElementById("id_private_0").checked){
+      document.getElementById("test_password").value = ''
+      document.getElementById("test_password").readOnly = true;
+    } 
+    else{
+      document.getElementById("test_password").readOnly = false;
+    }
+  }
+</script>
+
+<script>
+  (() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+  })()
+</script>
+{% endblock %}

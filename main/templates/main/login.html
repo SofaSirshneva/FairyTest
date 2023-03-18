@@ -1,0 +1,33 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <title>{{ title }}</title>
+</head>
+<body class="text-center">  
+    <main class="form-signin w-100 m-auto">
+      <form method="post">
+        {% csrf_token %}
+       
+        <img class="mb-4" src="{% static 'main/img/logo.png' %}" alt="" width="120px">
+        <h1 class="h3 mb-3 fw-normal">Вход</h1>
+        {% if form.errors %}
+          <div class="error">Неверный логин или пароль (Возможно, Вы не подтвердили почту)</div>
+        {% endif %}
+        <div class="form-floating">
+          <!--<input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">-->
+          {{ form.username }}
+          <label for="floatingInput">Логин</label>
+        </div>
+        <div class="form-floating">
+          <!--<input type="password" class="form-control" id="floatingPassword" placeholder="Password">-->
+          {{ form.password }}
+          <label for="floatingPassword">Пароль</label>
+        </div>
+    
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+      </form>
+    </main>  
+</body>
+{% endblock %}

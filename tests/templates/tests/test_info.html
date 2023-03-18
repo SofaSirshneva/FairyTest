@@ -1,0 +1,74 @@
+{% extends "main/frame.html" %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>  
+</head>
+<body>
+    <div class="heading text-center mb">Тест: {{ object.name }}</div>
+    <div style="margin-left: 15%;">
+        <div class="row">
+        <div class="col-md-6">
+        <div class="menulink" style="display: inline-block;">Категории: </div>
+        {% for category in object.categories.all %}
+        <div style="display: inline-block;"><a href="{% url 'category' category.name %}">{{ category.name|capfirst }}</a></div>
+        {% endfor %}
+        <br>
+        <div class="menulink" style="display: inline-block;">Автор:</div>
+        <div style="display: inline-block;"><a href="#"> {{ object.author.username }}</a></div>
+        <br>
+        <div class="menulink" style="display: inline-block;">Доступ:</div>
+        <div style="display: inline-block;">{% if object.private %}
+            По паролю
+        {% else %} Открытый {% endif %}</div>
+        <br>
+        <div class="menulink" style="display: inline-block;">Контроль времени:</div>
+        <div style="display: inline-block;">{{ object.time_control }}</div>
+        <br>
+        <div class="menulink" style="display: inline-block;">Количество прохождений:</div>
+        <div style="display: inline-block;">{{ object.number_of_passes }}</div>
+        <br>
+        <div class="menulink" style="display: inline-block;">Средний результат:</div>
+        <div style="display: inline-block;">{{ object.average_result }}</div>
+        </div>
+        <div class="col-md-6" style="margin-top: 5%;">
+            {% if request.user.is_authenticated %}
+                {% if request.user.id == object.author %}
+                    <div style="color:red; font-size: 30px;">
+                        Вы являетесь создателем этого теста и не можете его пройти!
+                    </div>
+                {% else %}
+                    <a><button class="btn btn-success btn-lg" type="button" onclick="checkpassword('{{object.password}}')">Перейти к прохождению теста</button></a>
+                    <input type="hidden" id="Url" data-url="{% url 'testpassing' slug=object.slug number=1 %}"/>
+                {% endif %}
+            {% else %}
+                <div style="color:red; font-size: 30px;">
+                    Сначала нужно авторизироваться
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    function checkpassword(password){
+
+        if ('{{object.private}}' == 'True'){
+            entered_pass = prompt('Введите пароль для доступа к тесту', '');
+            if (password == entered_pass){
+                var url = $("#Url").attr("data-url");
+                window.location.replace(url);
+            }
+            else{
+                alert('Неверный пароль, попробуйте ещё раз')
+            }
+        }
+        else{
+            var url = $("#Url").attr("data-url");
+            window.location.replace(url);
+        }
+    }
+</script>
+</body>
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends "main/frame.html" %}
+{% load static %}
+
+{% block content %}
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>
+  <title>
+    {{ title }}
+  </title>
+</head>
+<body>
+    <div class="container">
+        <main>
+            <div class="heading text-center mb">
+                Регистрация
+            </div>
+          <form class="needs-validation" method="POST" name="RegisterForm" enctype="multipart/form-data" onsubmit="confirm()">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-5 col-lg-4 order-md-last">
+              <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="menulink">Ваш аватар</span>
+              </h4>
+              <p>Щелкните по картинке для изменения</p>
+                <div class="card col-sm-9">
+                  <!--<input class="loadava" type="file" accept=".png, .jpg" onchange="loadFile(event)">-->
+                  {{ form.avatar }}
+                  <img src="{% static 'main/img/davatar.png' %}" width="300px" id="default">
+                </div>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <div class="row g-3 boxregistr">
+                  <div class="col-sm-5">
+                    <label for="firstName" class="form-label">Ваше имя*:</label>
+                    <!--<input type="text" class="form-control" id="firstName" required>-->
+                    {{ form.first_name }}
+                    <div class="invalid-feedback">
+                      Это поле обязательно для заполнения!
+                    </div>
+                  </div>
+      
+                  <div class="col-sm-5">
+                    <label for="lastName" class="form-label">Ваша фамилия*:</label>
+                    <!-- <input type="text" class="form-control" id="lastName" placeholder="" value="" required>-->
+                    {{ form.last_name }}
+                    <div class="invalid-feedback">
+                        Это поле обязательно для заполнения!
+                    </div>
+                  </div>
+      
+                  <div class="col-10">
+                    <label for="username" class="form-label">Логин*:</label>
+                    <div class="input-group has-validation">
+                      {{ form.username }}
+                      <!--<input type="text" class="form-control" id="username" required>-->
+                    <div class="invalid-feedback">
+                        Это поле обязательно для заполнения!
+                      </div>
+                    </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "username" %}
+                          <div class="error">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                  </div>
+      
+                  <div class="col-10">
+                    <label for="email" class="form-label">Email*:</label>
+                    <!--<input type="email" class="form-control" id="email" placeholder="you@example.com" required>-->
+                    {{ form.email }}
+                    <div class="invalid-feedback">
+                        Неверный email!
+                    </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "email" %}
+                          <div class="error">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                  </div>
+      
+                  <div class="col-10">
+                    <label for="phone" class="form-label">Номер телефона:</label>
+                    <!--<input type="text" class="form-control mask-phone" id="phone">-->
+                    {{ form.number }}
+                    <div class="invalid-feedback">
+                        Неверный номер!
+                    </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "number" %}
+                          <div class="error">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                  </div>
+      
+                  <div class="col-10">
+                    <label class="form-label">Дата рождения*:</label>
+                    <!--<input type="date" min="1930-01-01" max="2018-12-31" class="form-control" required>-->
+                    {{ form.date_of_birth }}
+                    <div class="invalid-feedback">
+                      Укажите верную дату!
+                  </div>
+                  </div>
+      
+                  <div class="col-sm-5">
+                    <label for="country" class="form-label">Регион*:</label>
+                    {{ form.country}}
+                    <div class="invalid-feedback">
+                        Это поле обязательно для заполнения!
+                    </div>
+                  </div>
+      
+                  <div class="col-sm-5">
+                   <label for="state" class="form-label">Город*:</label>
+                    {{ form.city }}
+                    <div class="invalid-feedback">
+                        Это поле обязательно для заполнения!
+                    </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "city" %}
+                          <div class="error">
+                            {% for error in field.errors %}
+                              *{{ error }}
+                            {% endfor %}
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                  </div>
+
+                  <div class="col-sm-5">
+                    <label for="password" class="form-label">Пароль*:</label>
+                    <!-- <input type="password" minlength="6" maxlength="15" class="form-control" required> -->
+                    {{ form.password1 }}
+                    <div class="invalid-feedback">
+                      Пароль должен быть длиной от 6 до 15 символов!
+                    </div>
+                    {% if form.errors %}
+                          {% for field in form %}
+                          {% if field.name == "password1" or field.name == "password2" %}
+                          <div class="error">
+                            <ul type="*">
+                            {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                          </div>
+                          {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                  </div>
+  
+                  <div class="col-sm-5">
+                    <label for="password" class="form-label">Повторите пароль*:</label>
+                    <!--<input type="password" minlength="6" maxlength="15" class="form-control" required>-->
+                    {{ form.password2 }}
+                    <div class="invalid-feedback">
+                      Повторите пароль!
+                    </div>
+                  </div>  
+                </div>
+
+                <hr class="my-4">
+      
+                <div class="boxregistr">
+                  <input type="checkbox" class="form-check-input" id="same-address" required>
+                  <label class="form-check-label" for="same-address">Я соглашаюсь с политикой конфиденциальности</label>
+                  <div class="invalid-feedback">
+                    Вы не согласились с политикой конфиденциальности!
+                </div>
+                </div>
+      
+                <div class="boxregistr">
+                  <!--<input type="checkbox" class="form-check-input" id="save-info" checked="checked">-->
+                  {{ form.mailing }}
+                  <label class="form-check-label" for="save-info">Получать уведомления на почту об обновлениях </label>
+                </div>
+                <div class="btnreg"><button class="btn btn-primary btn-lg" type="submit" >Зарегистрироваться</button></div>
+              </form>
+            </div>
+          </div>
+        </main>
+      </div>
+    
+<script>
+  (() => {
+  'use strict'
+  const forms = document.querySelectorAll('.needs-validation')
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+  })()
+</script>
+
+<script>
+  $("#number").mask("+7(999) 999-9999");
+</script>
+
+<script>
+  var loadFile = function (event) {
+  var image = document.getElementById("default");
+  image.src = URL.createObjectURL(event.target.files[0]);
+  };
+</script>
+
+<script>
+  function choicecity(country) {
+    var cityField = document.getElementById("id_city");
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/static/main/cities.json', true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var cities = JSON.parse(xhr.responseText);
+        var citiesToShow = [];
+        country--;
+        if(country>=67)
+          country++;
+        for(var i=0; i<cities.length; i++){
+          if(cities[i]['region_id'] == country){
+            citiesToShow.push(cities[i]['name'])
+          }
+        }
+        cityField.innerHTML = "";
+        for (var i = 0; i < citiesToShow.length; i++) {
+            var option = document.createElement("option");
+            option.value = citiesToShow[i];
+            option.text = citiesToShow[i];
+            cityField.appendChild(option);
+        }
+      }
+    };
+    xhr.send();
+}
+</script>
+
+<script>
+  function confirm() {
+      alert('Пожалуйста, перейдите на почту и подтвердите аккаунт')
+  };
+</script>
+</body>
+{% endblock %}
