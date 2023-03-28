@@ -81,15 +81,14 @@ WSGI_APPLICATION = 'FairyTail1.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'FairyTest', 
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'FairyTest',
         'USER': 'postgres',
         'PASSWORD': 'Kaneki0804',
-        'HOST': '', 
-        'PORT': '5432',
+        'HOST': '',
+        'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -140,7 +139,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 EMAIL_HOST = 'smtp.mail.ru' 
 EMAIL_HOST_USER = 'sofasirsneva@mail.ru' 
-EMAIL_HOST_PASSWORD = '5SSGkp4S3Actykt5qPY5' 
+EMAIL_HOST_PASSWORD = 'ZPycQsfGEX9uKe7i8Pt8' 
 EMAIL_PORT = 2525 
 EMAIL_USE_TLS = True 
 EMAIL_USE_SSL = False
