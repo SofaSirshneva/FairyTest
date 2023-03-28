@@ -343,9 +343,38 @@ class TestPassPage(DetailView):
             number+=1
             return redirect(reverse('testpassing', kwargs={'slug': slug, 'number': number}))
         
-        else:
-            return redirect('main')
+        elif 'send' in request.POST:
+            return redirect(reverse('testresult', kwargs={'slug': slug}))
 
+def test_result(request, slug):
+    result = 0
+    test = Tests.objects.get(slug=slug)
+    questions = Questions.objects.filter(test=test)
+    for question in questions:
+        answers = Answers.objects.filter(question=question)
+        try:
+            user_answer = Question_results.objects.get(question=question).answer
+            if question.type == 2:
+                correct = []
+                for answer in answers:
+                    if answer.correctness == True:
+                        correct.append(str(answer.id))
+            elif question.type == 0:
+                for answer in answers:
+                    if answer.correctness == True:
+                        correct = answer.text_content
+            else:
+                for answer in answers:
+                    if answer.correctness == True:
+                        correct = str(answer.id)
 
+            if user_answer == str(correct):
+                result+=1
+        except:
+            pass
+
+    Question_results.objects.filter(user=request.user).delete()
+
+    return render(request, 'tests/test_result.html', {'slug': slug, 'result': result, 'correct': user_answer, 'ans': correct})
 
 

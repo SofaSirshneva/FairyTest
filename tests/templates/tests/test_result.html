@@ -1,0 +1,19 @@
+{% extends "main/frame.html" %}
+
+{% block content %}
+<head>
+    <title>{{ title }}</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.maskedinput@1.4.1/src/jquery.maskedinput.min.js" type="text/javascript"></script>  
+</head>
+<body>
+    <div class="heading text-center mb">Результаты теста</div>
+    <div style="margin-left: 15%;">
+    <div class="menulink" style="display: inline-block;">Ваш результат: </div>
+    <div style="display: inline-block;">{{ result }}</div>
+    <div class="col-sm-4 mt text-center">
+        <button class="btn btn-success btn-lg">Вернуться на главную</button>
+    </div>
+    </div>
+</body>
+{% endblock %}
