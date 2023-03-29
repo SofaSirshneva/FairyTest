@@ -12,5 +12,5 @@ urlpatterns = [
     path('category/<str:name>', views.CategoryPage.as_view(), name='category'),
     path('testinfo/<str:name>', views.TestInfoPage.as_view(), name='testinfo'),
     path('testpassing/<slug:slug>/<int:number>', views.TestPassPage.as_view(), name='testpassing'),
-    path('testresult/<slug:slug>', views.test_result, name='testresult')
+    path('testresult/<slug:slug>', views.TestResultPage.as_view(), name='testresult')
 ]

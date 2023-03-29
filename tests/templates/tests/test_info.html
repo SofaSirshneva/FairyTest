@@ -40,7 +40,12 @@
                         Вы являетесь создателем этого теста и не можете его пройти!
                     </div>
                 {% else %}
-                    <a><button class="btn btn-success btn-lg" type="button" onclick="checkpassword('{{object.password}}')">Перейти к прохождению теста</button></a>
+                    {% if flag != None %}
+                        <div style="color: orange; font-size: 20px;">
+                            Вы уже проходили этот тест
+                        </div>
+                    {% endif %}
+                    <a><button class="btn btn-success btn-lg mt" type="button" onclick="checkpassword('{{object.password}}')">Перейти к прохождению теста</button></a>
                     <input type="hidden" id="Url" data-url="{% url 'testpassing' slug=object.slug number=1 %}"/>
                 {% endif %}
             {% else %}

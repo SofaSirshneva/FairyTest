@@ -24,17 +24,20 @@
                         <td class="pop lowborder">
                             №
                         </td>
-                        <td class="lowborder" style="width:400px">
+                        <td class="lowborder" style="width:375px">
                             Название
                         </td>
-                        <td class="lowborder" style="width:200px">
+                        <td class="lowborder" style="width:175px">
                             Количество прохождений
                         </td>
-                        <td class="lowborder" style="width:200px">
+                        <td class="lowborder" style="width:175px">
                             Средний результат
                         </td>
-                        <td class="lowborder" style="width:200px">
+                        <td class="lowborder" style="width:175px">
                             Рейтинг
+                        </td>
+                        <td class="lowborder" style="width:100px">
+                            Ваш результат
                         </td>
                         <td class="pop"></td>
                     </tr>
@@ -44,17 +47,27 @@
                             <td class="pop lowborder">
                                 {{ forloop.counter }}
                             </td>
-                            <td class="lowborder" style="width:400px">
+                            <td class="lowborder" style="width:375px">
                                <a href="{% url 'testinfo' test.name %}">{{test.name}}</a>
                             </td>
-                            <td class="lowborder" style="width:200px">
+                            <td class="lowborder" style="width:175px">
                                 {{ test.number_of_passes }}
                             </td>
-                            <td class="lowborder" style="width:200px">
+                            <td class="lowborder" style="width:175px">
                                 {{test.average_result}}
                             </td>
-                            <td class="lowborder" style="width:200px">
+                            <td class="lowborder" style="width:175px">
                                 {{test.rating}}
+                            </td>
+                            <td class="lowborder" style="width:100px">
+                                <div id="{{ test.name }}">-</div>
+                                {% for result in test.test_results_set.all %}
+                                {% if result.user == request.user %}
+                                    {{ result.result }}
+                                    <script> let elem = document.getElementById('{{ test.name }}');
+                                        elem.style.display = "none";</script>
+                                {% endif %}
+                                {% endfor %}
                             </td>
                             <td class="pop"></td>
                         </tr>
