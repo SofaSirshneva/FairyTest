@@ -64,7 +64,7 @@
                                 {% for result in test.test_results_set.all %}
                                 {% if result.user == request.user %}
                                     {{ result.result }}
-                                    <script> let elem = document.getElementById('{{ test.name }}');
+                                    <script> var elem = document.getElementById('{{ test.name }}');
                                         elem.style.display = "none";</script>
                                 {% endif %}
                                 {% endfor %}

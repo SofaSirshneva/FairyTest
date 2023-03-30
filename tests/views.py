@@ -3,8 +3,8 @@ from django.forms import modelformset_factory
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import ListView, DetailView, TemplateView
-from .forms import TestForm, QuestionForm, AnswerForm, TestPassForm
+from django.views.generic import ListView, DetailView
+from .forms import TestForm, QuestionForm, AnswerForm, TestPassForm, FeedbackForm
 from django.shortcuts import redirect
 from pytils.translit import slugify
 from .models import Questions, Tests, Answers, Categories, Question_results, Test_results
@@ -58,7 +58,7 @@ class TestUpdatePage(UpdateView):
             return reverse('updatequestion', kwargs={'test_slug': self.object.slug, 'que_num': 1, 'max': 1})
 
 class CategoriesPage(ListView):
-    template_name= 'tests/categories.html'
+    template_name = 'tests/categories.html'
     model = Categories
 
     def get_queryset(self):
@@ -92,7 +92,7 @@ class TestInfoPage(DetailView):
         context = super().get_context_data(**kwargs)
         context['title'] = self.kwargs['name']
         try:
-            info = Test_results.objects.filter(user = self.request.user).filter(test=self.object)
+            info = Test_results.objects.filter(user = self.request.user).get(test=self.object)
         except:
             info = None
         context['flag'] = info
@@ -104,7 +104,8 @@ class TestPassPage(DetailView):
     template_name = 'tests/passing_test.html'
 
     def get_object(self):
-        return Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number'])
+        test = Tests.objects.get(slug=self.kwargs['slug'])
+        return Questions.objects.filter(test=test).get(number=self.kwargs['number'])
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -113,7 +114,8 @@ class TestPassPage(DetailView):
         context['previous_number'] = self.kwargs['number']-1
 
         try:
-            next_question = Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number']+1)
+            test=Tests.objects.get(slug=self.kwargs['slug'])
+            next_question = Questions.objects.filter(test=test).get(number=self.kwargs['number']+1)
         except:
             next_question = None
         context['next_number'] = next_question
@@ -131,7 +133,8 @@ class TestPassPage(DetailView):
         return context
     
     def post(self, request, slug, number):
-        object = Questions.objects.filter(test=Tests.objects.get(slug=self.kwargs['slug'])).get(number=self.kwargs['number'])
+        test = Tests.objects.get(slug=self.kwargs['slug'])
+        object = Questions.objects.filter(test=test).get(number=self.kwargs['number'])
         result, created = Question_results.objects.get_or_create(user = request.user, question = object)
         form = TestPassForm(object, request.POST)
 
@@ -158,16 +161,31 @@ class TestPassPage(DetailView):
         elif 'send' in request.POST:
             return redirect(reverse('testresult', kwargs={'slug': slug}))
         
-class TestResultPage(TemplateView):
+class TestResultPage(DetailView):
     template_name = 'tests/test_result.html'
+    model = Test_results
+    form_class = FeedbackForm
+
+    def get_object(self):
+        test = Tests.objects.get(slug=self.kwargs['slug'])
+        test_result(self.request, self.kwargs['slug'])
+        return Test_results.objects.get(test=test, user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Результаты теста'
         context['slug'] = self.kwargs['slug']
-        context['result'] = test_result(self.request, self.kwargs['slug'])
+        context['form'] = FeedbackForm
         return context
     
+    def post(self, request, slug):
+        form = FeedbackForm(request.POST or None)
+        if form.is_valid():
+            count = form.cleaned_data["star"]
+            if count != '':
+                request.object.feedback = count
+
+        return redirect('main')
 
 def test_result(request, slug):
     result = 0
@@ -192,7 +210,7 @@ def test_result(request, slug):
                         correct = answer.id
 
             if user_answer == str(correct):
-                result+=1
+                result += 1
         except:
             pass
 

@@ -96,3 +96,15 @@ class TestPassForm(forms.Form):
                                      widget=TextInput({
                                         'class' : 'form-control inputanswer',
                                      }))
+     
+class FeedbackForm(forms.Form):
+    NUMBER_OF_STARS=(
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+    )
+    star = forms.ChoiceField(label="", required=False, choices=NUMBER_OF_STARS, widget=RadioSelect({
+        'class' : 'rating-area',
+    }))
