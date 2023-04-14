@@ -12,13 +12,14 @@ services:
       - ./.env.dev
     depends_on:
       - db
+    restart: always
   db:
     image: postgres:15.2-alpine
     volumes:
       - postgres_volume:/var/lib/postgresql/data/
 
     ports:
-      - 5436:5436
+      - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Kaneki0804
