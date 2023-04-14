@@ -27,7 +27,10 @@
             {% csrf_token %}
             <div class="modal-body">
                 <div class="rating-area">
-                  {{ form.star }}
+                  {% for radio in form.star %}
+                  {{ radio.tag }}
+                  <label></label>
+                  {% endfor %}
                 </div>
             </div>
             <div class="modal-footer">

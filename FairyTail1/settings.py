@@ -1,21 +1,17 @@
 from pathlib import Path
 import os
+from os import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fon80!t20x&r$9@$4n2^l(i-&3kpc=3uy!0s(t+tz0v!_)j9hp'
+SECRET_KEY = environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = ['127.0.0.1']
-
+ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
@@ -69,12 +65,12 @@ WSGI_APPLICATION = 'FairyTail1.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'FairyTest',
-        'USER': 'postgres',
-        'PASSWORD': 'Kaneki0804',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': os.environ.get('POSTGRES_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('POSTGRES_DATABASE', 'FairyTest'),
+        'USER': os.environ.get('POSTGRES_USER', 'user'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
+        'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', '5436'),
     }
 }
 

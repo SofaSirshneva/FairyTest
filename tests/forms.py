@@ -105,6 +105,4 @@ class FeedbackForm(forms.Form):
         (4, 4),
         (5, 5),
     )
-    star = forms.ChoiceField(label="", required=False, choices=NUMBER_OF_STARS, widget=RadioSelect({
-        'class' : 'rating-area',
-    }))
+    star = forms.ChoiceField(required=False, choices=NUMBER_OF_STARS, widget=RadioSelect)

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./FairyTest
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./FairyTest/:/usr/src/FairyTest/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+  db:
+    image: postgres:15.2-alpine
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+
+    ports:
+      - 5436:5436
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Kaneki0804
+      - POSTGRES_DB=FairyTest
+
+volumes:
+  postgres_volume:
+
