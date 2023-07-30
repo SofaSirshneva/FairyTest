@@ -79,7 +79,6 @@ class RegisterForm(UserCreationForm):
                            }))
         self.fields["mailing"] = forms.BooleanField(required=False,
                            widget=CheckboxInput({
-                               'class': 'form-check-input',
                                'checked' : 'checked'
                            }))
         self.fields["avatar"] = forms.ImageField(required=False,

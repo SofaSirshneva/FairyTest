@@ -1,9 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from main.forms import RegisterForm, LoginUserForm
 from django.views.generic.edit import CreateView
-from django.shortcuts import redirect
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.contrib.sites.shortcuts import get_current_site 
