@@ -16,11 +16,11 @@ class RegisterForm(UserCreationForm):
         i=0
         REGION=()
 
-        with open('main\static\main\pegion.json', 'r',  encoding="utf8") as f:
-            region =  json.load(f)
+        with open(r'main/static/main/pegion.json', 'r',  encoding="utf8") as f:
+            region = json.load(f)
 
-        """with open('FairyTail1\main\static\main\pegion.json', 'r',  encoding="utf8") as f:
-            region =  json.load(f) """
+        # with open(r'FairyTail1/main/static/main/pegion.json', 'r',  encoding="utf8") as f:
+        #     region =  json.load(f)
         
         while i!= 78:
             REGIONS=[i]
