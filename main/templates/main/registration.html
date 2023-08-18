@@ -24,16 +24,14 @@
               </h4>
               <p>Щелкните по картинке для изменения</p>
                 <div class="card col-sm-9">
-                  <!--<input class="loadava" type="file" accept=".png, .jpg" onchange="loadFile(event)">-->
                   {{ form.avatar }}
-                  <img src="{% static 'main/img/davatar.png' %}" width="300px" id="default">
+                  <img src="{% static '/main/img/davatar.png' %}" width="300px" id="default">
                 </div>
             </div>
             <div class="col-md-7 col-lg-8">
                 <div class="row g-3 boxregistr">
                   <div class="col-sm-5">
                     <label for="firstName" class="form-label">Ваше имя*:</label>
-                    <!--<input type="text" class="form-control" id="firstName" required>-->
                     {{ form.first_name }}
                     <div class="invalid-feedback">
                       Это поле обязательно для заполнения!
@@ -42,7 +40,6 @@
       
                   <div class="col-sm-5">
                     <label for="lastName" class="form-label">Ваша фамилия*:</label>
-                    <!-- <input type="text" class="form-control" id="lastName" placeholder="" value="" required>-->
                     {{ form.last_name }}
                     <div class="invalid-feedback">
                         Это поле обязательно для заполнения!
@@ -53,7 +50,6 @@
                     <label for="username" class="form-label">Логин*:</label>
                     <div class="input-group has-validation">
                       {{ form.username }}
-                      <!--<input type="text" class="form-control" id="username" required>-->
                     <div class="invalid-feedback">
                         Это поле обязательно для заполнения!
                       </div>
@@ -73,7 +69,6 @@
       
                   <div class="col-10">
                     <label for="email" class="form-label">Email*:</label>
-                    <!--<input type="email" class="form-control" id="email" placeholder="you@example.com" required>-->
                     {{ form.email }}
                     <div class="invalid-feedback">
                         Неверный email!
@@ -93,7 +88,6 @@
       
                   <div class="col-10">
                     <label for="phone" class="form-label">Номер телефона:</label>
-                    <!--<input type="text" class="form-control mask-phone" id="phone">-->
                     {{ form.number }}
                     <div class="invalid-feedback">
                         Неверный номер!
@@ -113,7 +107,6 @@
       
                   <div class="col-10">
                     <label class="form-label">Дата рождения*:</label>
-                    <!--<input type="date" min="1930-01-01" max="2018-12-31" class="form-control" required>-->
                     {{ form.date_of_birth }}
                     <div class="invalid-feedback">
                       Укажите верную дату!

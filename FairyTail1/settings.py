@@ -123,7 +123,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 EMAIL_HOST = 'smtp.mail.ru' 
 EMAIL_HOST_USER = 'sofasirsneva@mail.ru' 
-EMAIL_HOST_PASSWORD = 'ZPycQsfGEX9uKe7i8Pt8' 
+EMAIL_HOST_PASSWORD = 'bmgdDuBzziESxmQuqwah' 
 EMAIL_PORT = 2525 
 EMAIL_USE_TLS = True 
 EMAIL_USE_SSL = False
